@@ -1,0 +1,11 @@
+*.sln
+
+*.sdf
+
+*.vcxproj
+
+*.vcxproj.filters
+
+
+*.VC.opendb
+*.suo
