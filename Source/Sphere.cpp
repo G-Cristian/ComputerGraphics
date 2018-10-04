@@ -14,6 +14,10 @@ namespace K9 {
 			float minHit = std::min(x1, x2);
 			hit = (t0 <= minHit && minHit <= t1);
 			if (hit) {
+				outHitRecord.ka = _material.ambientCoefficient();
+				outHitRecord.kd = _material.diffuseCoefficient();
+				outHitRecord.ks = _material.specularCoefficient();
+				outHitRecord.p = _material.phongExponent();
 				outHitRecord.t = minHit;
 				outHitRecord.n = ((ray.origin() + minHit*ray.direction()) - _center) / _radius;
 			}
