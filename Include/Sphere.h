@@ -2,6 +2,7 @@
 #define _SPHERE_H_
 
 #include <HitRecord.h>
+#include <memory>
 #include <Ray.h>
 #include <Surface.h>
 #include <Vector3.h>
@@ -16,7 +17,7 @@ namespace K9 {
 		}
 		~Sphere() {}
 
-		bool hit(const Ray &ray, float t0, float t1, HitRecord &outHitRecord) const override final;
+		bool hit(const Ray &ray, float t0, float t1, std::unique_ptr<HitRecord> &outHitRecord) const override final;
 	private:
 		Vector3 _center;
 		float _radius;

@@ -4,13 +4,14 @@
 //my includes
 #include <HitRecord.h>
 #include <Material.h>
+#include <memory>
 #include <Ray.h>
 
 namespace K9 {
 	class Surface {
 	public:
-		~Surface() = default;
-		virtual bool hit(const Ray &ray, float t0, float t1, HitRecord &outHitRecord) const = 0;
+		virtual ~Surface() = default;
+		virtual bool hit(const Ray &ray, float t0, float t1, std::unique_ptr<HitRecord> &outHitRecord) const = 0;
 
 		//getters
 		const Material& material() const { return _material; }

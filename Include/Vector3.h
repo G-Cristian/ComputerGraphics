@@ -41,7 +41,10 @@ namespace K9 {
 
 		//other vector operations
 		float norm() const;
-		void normalize();
+		Vector3& normalize();
+		friend Vector3 cross(const Vector3 &v1, const Vector3 &v2);
+		friend Vector3 perElementProduct(const Vector3 &v1, const Vector3 &v2);
+		bool isZero() const { return _vectorImp.x == 0.0f && _vectorImp.y == 0.0f && _vectorImp.z == 0.0f; }
 
 		//helpers
 		friend void swap(Vector3 &v1, Vector3 &v2);
@@ -63,7 +66,9 @@ namespace K9 {
 	Vector3 operator*(float scalar, const Vector3 &vector);
 
 	//other functions
-	inline Vector3 normaliazed(const Vector3 &vector);
+	inline Vector3 normalized(const Vector3 &vector);
+	inline Vector3 cross(const Vector3 &v1, const Vector3 &v2);
+	inline Vector3 perElementProduct(const Vector3 &v1, const Vector3 &v2);
 	
 	inline void swap(Vector3 &v1, Vector3 &v2);
 }

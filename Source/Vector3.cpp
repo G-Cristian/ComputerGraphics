@@ -38,15 +38,27 @@ namespace K9 {
 		return sqrtf((*this) * (*this));
 	}
 
-	inline void Vector3::normalize() {
+	inline Vector3& Vector3::normalize() {
 		float n = this->norm();
 		*this = *this / n;
+
+		return *this;
 	}
 
-	inline Vector3 normaliazed(const Vector3 &vector) {
+	inline Vector3 normalized(const Vector3 &vector) {
 		Vector3 vec(vector);
 		vec.normalize();
 		return vec;
+	}
+
+	inline Vector3 cross(const Vector3 &v1, const Vector3 &v2) {
+		return Vector3(	v1._vectorImp.y * v2._vectorImp.z - v2._vectorImp.y * v1._vectorImp.z,
+						v1._vectorImp.z * v2._vectorImp.x - v2._vectorImp.z * v1._vectorImp.x,
+						v1._vectorImp.x * v2._vectorImp.y - v2._vectorImp.x * v1._vectorImp.y);
+	}
+
+	inline Vector3 perElementProduct(const Vector3 &v1, const Vector3 &v2) {
+		return Vector3(v1._vectorImp.x * v2._vectorImp.x, v1._vectorImp.y * v2._vectorImp.y, v1._vectorImp.z * v2._vectorImp.z);
 	}
 
 	inline void swap(Vector3 &v1, Vector3 &v2) {

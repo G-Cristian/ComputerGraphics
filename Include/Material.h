@@ -9,11 +9,12 @@ namespace K9 {
 
 	class Material {
 	public:
-		Material(const Color &ka, const Color &kd, const Color &ks, float p) :
+		Material(const Color &ka, const Color &kd, const Color &ks, float p, const Color &km) :
 			_ka(ka),
 			_kd(kd),
 			_ks(ks),
-			_p(p) {
+			_p(p),
+			_km(km) {
 		}
 
 		//getters
@@ -25,12 +26,15 @@ namespace K9 {
 		Color& specularCoefficient() { return _ks; }
 		const float& phongExponent() const { return _p; }
 		float& phongExponent() { return _p; }
+		const Color& mirrorReflection() const { return _km; }
+		Color& mirrorReflection() { return _km; }
 
 	private:
 		Color _ka;			//Ambient coefficient
 		Color _kd;			//Diffuse coefficient
 		Color _ks;			//Specular coefficient
 		float _p;			//Phong exponent
+		Color _km;			//Mirror reflection
 	};
 
 }
