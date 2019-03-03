@@ -7,6 +7,10 @@ namespace K9 {
 
 	class Vector3 {
 	public:
+		Vector3():
+			Vector3(0.0f, 0.0f, 0.0f) {
+		}
+
 		Vector3(float x, float y, float z) {
 			_vectorImp.x = x;
 			_vectorImp.y = y;

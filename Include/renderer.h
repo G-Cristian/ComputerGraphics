@@ -33,7 +33,7 @@ namespace K9 {
 
 		void resizeWindow(int width, int height);
 
-		void drawPoint(const Geometry::Point2D &coord, const Color &color);
+		void drawPoint(const ::Geometry::Point2D &coord, const Color &color);
 
 		void show(int x, int y) const;
 		void exportToImage(std::string imageName) const;

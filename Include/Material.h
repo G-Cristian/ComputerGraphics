@@ -9,6 +9,10 @@ namespace K9 {
 
 	class Material {
 	public:
+		Material() :
+			Material(Color(), Color(), Color(), 0.0f, Color()) {
+		}
+
 		Material(const Color &ka, const Color &kd, const Color &ks, float p, const Color &km) :
 			_ka(ka),
 			_kd(kd),

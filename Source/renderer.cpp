@@ -1,5 +1,6 @@
 #include "../Include/renderer.h"
 #include <algorithm>
+#include <iostream>
 
 using namespace std;
 namespace K9 {

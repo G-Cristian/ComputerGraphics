@@ -5,33 +5,45 @@
 #include <iostream>
 #include <math.h>
 #include <string>
+#include <Vector3.h>
 
 namespace K9 {
 	class Vector4 {
 		typedef float ElementsType;
 	public:
+		Vector4() :
+			Vector4(0.0f, 0.0f, 0.0f, 0.0f) {
+		}
 		Vector4(ElementsType x, ElementsType y, ElementsType z, ElementsType w) {
 			_vectorImp.x = x;
 			_vectorImp.y = y;
 			_vectorImp.z = z;
 			_vectorImp.w = w;
-			std::cout << "Vector4 constructor 1" << std::endl;
+			//std::cout << "Vector4 constructor 1" << std::endl;
 		}
 
 		Vector4(ElementsType vec[4]) {
 			memcpy((void*)(_vectorImp.vec), (void*)(vec), 4 * sizeof(ElementsType));
-			std::cout << "Vector4 constructor 2" << std::endl;
+		//	std::cout << "Vector4 constructor 2" << std::endl;
+		}
+
+		Vector4(Vector3 xyz, ElementsType w) {
+			_vectorImp.x = xyz[0];
+			_vectorImp.y = xyz[1];
+			_vectorImp.z = xyz[2];
+			_vectorImp.w = w;
+			//std::cout << "Vector4 constructor 1" << std::endl;
 		}
 
 		Vector4(const Vector4 &other):
 			_vectorImp(other._vectorImp) {
-			std::cout << "Vector4 copy constructor" << std::endl;
+			//std::cout << "Vector4 copy constructor" << std::endl;
 		}
 
-		Vector4(Vector4 &&other) noexcept:
-			_vectorImp(std::move(other._vectorImp)) {
-			std::cout << "Vector4 move constructor" << std::endl;
-		}
+//		Vector4(Vector4 &&other) noexcept:
+//			_vectorImp(std::move(other._vectorImp)) {
+//			std::cout << "Vector4 move constructor" << std::endl;
+//		}
 
 		~Vector4() {}
 
@@ -54,13 +66,13 @@ namespace K9 {
 			return *this;
 		}
 
-		Vector4& operator=(Vector4 &&other) noexcept {
-			if (this != &other) {
-				_vectorImp = std::move(other._vectorImp);
-			}
+//		Vector4& operator=(Vector4 &&other) noexcept {
+//			if (this != &other) {
+//				_vectorImp = std::move(other._vectorImp);
+//			}
 
-			return *this;
-		}
+//			return *this;
+//		}
 
 		//aritmetic operators
 		Vector4& operator+=(const Vector4 &other) {
@@ -109,6 +121,8 @@ namespace K9 {
 		friend Vector4 operator*(ElementsType scalar, const Vector4 &vector);
 		friend Vector4 operator/(const Vector4 &vector, ElementsType scalar);
 
+		friend Vector4 perElementProduct(const Vector4 &v1, const Vector4 &v2);
+
 		//vector operations
 		friend ElementsType dot(const Vector4 &left, const Vector4 &right);
 
@@ -117,10 +131,10 @@ namespace K9 {
 		}
 
 		Vector4& normalize() {
-			return (*this) / norm();
+			return (*this) /= norm();
 		}
 
-		friend Vector4 normalize(const Vector4 &vector);
+		friend Vector4 normalized(const Vector4 &vector);
 
 	private:
 		//helper functions
@@ -165,11 +179,15 @@ namespace K9 {
 		return aux /= scalar;
 	}
 
+	inline Vector4 perElementProduct(const Vector4 &v1, const Vector4 &v2) {
+		return Vector4(v1._vectorImp.x * v2._vectorImp.x, v1._vectorImp.y * v2._vectorImp.y, v1._vectorImp.z * v2._vectorImp.z, v1._vectorImp.w * v2._vectorImp.w);
+	}
+
 	inline Vector4::ElementsType dot(const Vector4 &left, const Vector4 &right) {
 		return left[0] * right[0] + left[1] * right[1] + left[2] * right[2] + left[3] * right[3];
 	}
 
-	inline Vector4 normalize(const Vector4 &vector) {
+	inline Vector4 normalized(const Vector4 &vector) {
 		Vector4 aux(vector);
 		return aux.normalize();
 	}
