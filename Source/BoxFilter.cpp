@@ -2,7 +2,7 @@
 
 namespace K9 {
 	float BoxFilter::execute(float x) const {
-		if (-1 <= _radius && _radius < 1) {
+		if (-_radius <= x && x < _radius) {
 			return 1 / (2 * _radius);
 		}
 		else

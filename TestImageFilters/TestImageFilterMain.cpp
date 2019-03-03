@@ -6,9 +6,11 @@
 #include <BoxFilter.h>
 #include <Filter.h>
 #include <Image.h>
+#include <string>
 
 K9::Image initImage(uchar *img, int cols, int rows);
 uchar* imageToUchar(const K9::Image &img);
+void saveImage(const K9::Image &img, const std::string &name);
 
 K9::Image applyFilter(const K9::Image &img, K9::Filter *filter, float scale = 1.0f);
 
@@ -31,8 +33,10 @@ int main()
 	K9::Image img = initImage(image.data, image.cols, image.rows);
 
 	//apply filters
-	K9::BoxFilter boxFilter;
-	K9::Image boxFiltered = applyFilter(img, &boxFilter, 2.0f);
+	K9::BoxFilter boxFilter(.5f);
+	K9::Image boxFiltered = applyFilter(img, &boxFilter, 5.0f);
+
+	saveImage(boxFiltered, "C:\\Users\\Cristian\\Documents\\GitHub\\ComputerGraphics\\TestImageFilters\\BoxFiltered.png");
 
 	//to Mat
 	uchar* ucharImg = imageToUchar(boxFiltered);
@@ -75,38 +79,72 @@ uchar* imageToUchar(const K9::Image &img) {
 	return out;
 }
 
+void saveImage(const K9::Image &img, const std::string &name) {
+	using namespace cv;
+	using namespace std;
+
+	//to Mat
+	uchar* ucharImg = imageToUchar(img);
+	Mat out = Mat(img.getHeight(), img.getWidth(), CV_8UC3, (void *)ucharImg);
+
+	imwrite(name.c_str(), out);   // write to file
+
+	delete[]ucharImg;
+}
+
 K9::Image applyFilter(const K9::Image &img, K9::Filter *filter, float scale /*=1.0f*/) {
 	unsigned int nx = img.getWidth();
 	unsigned int ny = img.getHeight();
 	K9::Image out(nx, ny);
 
-	float r = filter->getRadius();
+	float r = filter->getRadius()*scale;
 
 	//TODO: use a unique pointer of float[] instead.
 	float *SR = new float[nx];
 	float *SG = new float[nx];
 	float *SB = new float[nx];
 
-	for (int j = static_cast<int>(ceilf(r)); j < static_cast<int>(ny - r); ++j) {
+	for (int j = 0; j < ny; ++j) {
 		for (int k = 0; k < nx; ++k) {
 			SR[k] = 0.0f;
 			SG[k] = 0.0f;
 			SB[k] = 0.0f;
-			for (int jp = static_cast<int>(ceilf(j - r)); jp <= static_cast<int>(j + r); ++jp) {
+			float filterValueSumCol = 0.0f;
+			float minJp = std::max(static_cast<int>(ceilf(j - r)), 0);
+			float maxJp = std::min(static_cast<unsigned int>(j + r), ny-1);
+			for (int jp = minJp; jp <= maxJp; ++jp) {
 				K9::Color32 color = img.getColorAtXY(k, jp);
 				float filterValue = filter->executeScaled(j - jp, scale);
+				filterValueSumCol += filterValue;
 				SR[k] += K9::getRedColor32(color)*filterValue;
 				SG[k] += K9::getGreenColor32(color)*filterValue;
 				SB[k] += K9::getBlueColor32(color)*filterValue;
 			}
+			SR[k] /= filterValueSumCol;
+			SG[k] /= filterValueSumCol;
+			SB[k] /= filterValueSumCol;
 		}
 
-		for (int i = static_cast<int>(ceilf(r)); i < static_cast<int>(nx - r);++i) {
-			for (int ip = static_cast<int>(ceilf(i - r)); ip <= static_cast<int>(i + r); ++ip) {
+		for (int i = 0; i < nx; ++i) {
+			float filterValueSumRow = 0.0f;
+			float minIp = std::max(static_cast<int>(ceilf(i - r)), 0);
+			float maxIp = std::min(static_cast<unsigned int>(i + r), nx - 1);
+			K9::uchar red = 0;
+			K9::uchar green = 0;
+			K9::uchar blue = 0;
+			
+			for (int ip = minIp; ip <= maxIp; ++ip) {
 				float filterValue = filter->executeScaled(i - ip, scale);
-				K9::Color32 color = K9::setColor32(SR[ip] * filterValue, SG[ip] * filterValue, SB[ip] * filterValue, 255);
-				out.setColorAtXY(color, i, j);
+				filterValueSumRow += filterValue;
+				
+				red +=  SR[ip] * filterValue;
+				green += SG[ip] * filterValue;
+				blue += SB[ip] * filterValue;				
 			}
+
+			float filterValueSum = filterValueSumRow;
+			K9::Color32 color = K9::setColor32(red / filterValueSum, green / filterValueSum, blue / filterValueSum, 255);
+			out.setColorAtXY(color, i, j);
 		}
 	}
 
