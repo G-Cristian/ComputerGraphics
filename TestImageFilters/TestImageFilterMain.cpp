@@ -7,22 +7,24 @@
 #include <Filter.h>
 #include <GaussianFilter.h>
 #include <Image.h>
+#include <ImageOperations.h>
+#include <SharpFilter.h>
 #include <string>
 
 K9::Image initImage(uchar *img, int cols, int rows);
 uchar* imageToUchar(const K9::Image &img);
 void saveImage(const K9::Image &img, const std::string &name);
 
-K9::Image applyFilter(const K9::Image &img, K9::Filter *filter, float scale = 1.0f);
-
 int main()
 {
 	using namespace cv;
 	using namespace std;
 	Mat image;
+	Mat imageCircles;
 	image = imread("C:\\Users\\Cristian\\Documents\\GitHub\\ComputerGraphics\\TestImageFilters\\TestImage.png", CV_LOAD_IMAGE_COLOR);   // Read the file
+	imageCircles = imread("C:\\Users\\Cristian\\Documents\\GitHub\\ComputerGraphics\\TestImageFilters\\scaledDown_3_3_GussianFilter1.png", CV_LOAD_IMAGE_COLOR);   // Read the file
 
-	if (!image.data)                              // Check for invalid input
+	if (!image.data || !imageCircles.data)                              // Check for invalid input
 	{
 		cout << "Could not open or find the image" << std::endl;
 		return -1;
@@ -30,33 +32,51 @@ int main()
 
 	cout << image.channels() << endl;
 
+	::K9::Images::ImageOperations imageOperations;
 	//to K9::Image
 	K9::Image img = initImage(image.data, image.cols, image.rows);
+	K9::Image imgCircles = initImage(imageCircles.data, imageCircles.cols, imageCircles.rows);
 
-	//apply filters
-	K9::BoxFilter boxFilter(.5f);
-	K9::Image boxFiltered = applyFilter(img, &boxFilter, 2.0f);
-	saveImage(boxFiltered, "C:\\Users\\Cristian\\Documents\\GitHub\\ComputerGraphics\\TestImageFilters\\BoxFiltered.png");
+	////apply filters
+	//K9::BoxFilter boxFilter(.5f);
+	//K9::Image boxFiltered = imageOperations.applyFilter(img, &boxFilter, 2.0f);
+	//saveImage(boxFiltered, "C:\\Users\\Cristian\\Documents\\GitHub\\ComputerGraphics\\TestImageFilters\\BoxFiltered.png");
 
-	K9::GaussianFilter gaussianFilter1;
-	K9::Image gaussianFiltered1 = applyFilter(img, &gaussianFilter1, 1.0f);
-	saveImage(gaussianFiltered1, "C:\\Users\\Cristian\\Documents\\GitHub\\ComputerGraphics\\TestImageFilters\\GaussianFiltered1.png");
+	//K9::GaussianFilter gaussianFilter1;
+	//K9::Image gaussianFiltered1 = imageOperations.applyFilter(img, &gaussianFilter1, 1.0f);
+	//saveImage(gaussianFiltered1, "C:\\Users\\Cristian\\Documents\\GitHub\\ComputerGraphics\\TestImageFilters\\GaussianFiltered1.png");
 
-	K9::GaussianFilter gaussianFilter2(3.0f,6);
-	K9::Image gaussianFiltered2 = applyFilter(img, &gaussianFilter2, 1.0f);
-	saveImage(gaussianFiltered2, "C:\\Users\\Cristian\\Documents\\GitHub\\ComputerGraphics\\TestImageFilters\\GaussianFiltered2.png");
+	//K9::GaussianFilter gaussianFilter2(3.0f,6);
+	//K9::Image gaussianFiltered2 = imageOperations.applyFilter(img, &gaussianFilter2, 1.0f);
+	//saveImage(gaussianFiltered2, "C:\\Users\\Cristian\\Documents\\GitHub\\ComputerGraphics\\TestImageFilters\\GaussianFiltered2.png");
 
-	K9::GaussianFilter gaussianFilter3(1,2);
-	K9::Image gaussianFiltered3 = applyFilter(img, &gaussianFilter3, 3.0f);
-	saveImage(gaussianFiltered3, "C:\\Users\\Cristian\\Documents\\GitHub\\ComputerGraphics\\TestImageFilters\\GaussianFiltered3.png");
+	//K9::GaussianFilter gaussianFilter3(1,2);
+	//K9::Image gaussianFiltered3 = imageOperations.applyFilter(img, &gaussianFilter3, 3.0f);
+	//saveImage(gaussianFiltered3, "C:\\Users\\Cristian\\Documents\\GitHub\\ComputerGraphics\\TestImageFilters\\GaussianFiltered3.png");
 
-	K9::GaussianFilter gaussianFilter4(1, 6);
-	K9::Image gaussianFiltered4 = applyFilter(img, &gaussianFilter4, 1.0f);
-	saveImage(gaussianFiltered4, "C:\\Users\\Cristian\\Documents\\GitHub\\ComputerGraphics\\TestImageFilters\\GaussianFiltered4.png");
+	//K9::GaussianFilter gaussianFilter4(1, 6);
+	//K9::Image gaussianFiltered4 = imageOperations.applyFilter(img, &gaussianFilter4, 1.0f);
+	//saveImage(gaussianFiltered4, "C:\\Users\\Cristian\\Documents\\GitHub\\ComputerGraphics\\TestImageFilters\\GaussianFiltered4.png");
+
+	//K9::SharpFilter sharpFilter1(0.5f);
+	//K9::Image sharpFiltered1 = imageOperations.applyFilter(img, &sharpFilter1, 1.0f);
+	//saveImage(sharpFiltered1, "C:\\Users\\Cristian\\Documents\\GitHub\\ComputerGraphics\\TestImageFilters\\sharpFiltered1.png");
+
+	//K9::SharpFilter sharpFilterCircles1(1.0f);
+	//K9::Image sharpFilteredCircles1 = imageOperations.applyFilter(imgCircles, &sharpFilterCircles1, 1.0f);
+	//saveImage(sharpFilteredCircles1, "C:\\Users\\Cristian\\Documents\\GitHub\\ComputerGraphics\\TestImageFilters\\sharpFilteredCircles1.png");
+
+	K9::GaussianFilter scaleUp_3_3_GussianFilter1(1.0f, 1.0f);
+	K9::Image scaledUp_3_3_GussianFilter1 = imageOperations.resample(imgCircles, imgCircles.getWidth() * 3, imgCircles.getHeight() * 3, scaleUp_3_3_GussianFilter1);
+	saveImage(scaledUp_3_3_GussianFilter1, "C:\\Users\\Cristian\\Documents\\GitHub\\ComputerGraphics\\TestImageFilters\\scaledDownUp_3_3_GussianFilter1.png");
+
+	//K9::GaussianFilter scaleDown_3_3_GussianFilter1(1.0f, 3.0f);
+	//K9::Image scaledDown_3_3_GussianFilter1 = imageOperations.resample(imgCircles, imgCircles.getWidth() / 3.0f , imgCircles.getHeight() / 3.0f, scaleDown_3_3_GussianFilter1);
+	//saveImage(scaledDown_3_3_GussianFilter1, "C:\\Users\\Cristian\\Documents\\GitHub\\ComputerGraphics\\TestImageFilters\\scaledUpDown_3_3_GussianFilter1.png");
 
 	//to Mat
-	uchar* ucharImg = imageToUchar(boxFiltered);
-	Mat out = Mat(boxFiltered.getHeight(), boxFiltered.getWidth(), CV_8UC3, (void *)ucharImg);
+	uchar* ucharImg = imageToUchar(scaledUp_3_3_GussianFilter1);
+	Mat out = Mat(scaledUp_3_3_GussianFilter1.getHeight(), scaledUp_3_3_GussianFilter1.getWidth(), CV_8UC3, (void *)ucharImg);
 
 	namedWindow("Display window", WINDOW_AUTOSIZE);// Create a window for display.
 	imshow("Display window", out);                   // Show our image inside it.
@@ -106,71 +126,4 @@ void saveImage(const K9::Image &img, const std::string &name) {
 	imwrite(name.c_str(), out);   // write to file
 
 	delete[]ucharImg;
-}
-
-K9::Image applyFilter(const K9::Image &img, K9::Filter *filter, float scale /*=1.0f*/) {
-	unsigned int nx = img.getWidth();
-	unsigned int ny = img.getHeight();
-	K9::Image out(nx, ny);
-
-	float r = filter->getRadius()*scale;
-
-	//TODO: use a unique pointer of float[] instead.
-	float *SR = new float[nx];
-	float *SG = new float[nx];
-	float *SB = new float[nx];
-
-	for (int j = 0; j < ny; ++j) {
-		for (int k = 0; k < nx; ++k) {
-			SR[k] = 0.0f;
-			SG[k] = 0.0f;
-			SB[k] = 0.0f;
-			float filterValueSumCol = 0.0f;
-			float minJp = std::max(static_cast<int>(ceilf(j - r)), 0);
-			float maxJp = std::min(static_cast<unsigned int>(j + r), ny-1);
-			for (int jp = minJp; jp <= maxJp; ++jp) {
-				K9::Color32 color = img.getColorAtXY(k, jp);
-				float filterValue = filter->executeScaled(j - jp, scale);
-				filterValueSumCol += filterValue;
-				SR[k] += static_cast<float>(K9::getRedColor32(color))*filterValue;
-				SG[k] += static_cast<float>(K9::getGreenColor32(color))*filterValue;
-				SB[k] += static_cast<float>(K9::getBlueColor32(color))*filterValue;
-			}
-			SR[k] /= filterValueSumCol;
-			SG[k] /= filterValueSumCol;
-			SB[k] /= filterValueSumCol;
-		}
-
-		for (int i = 0; i < nx; ++i) {
-			float filterValueSumRow = 0.0f;
-			float minIp = std::max(static_cast<int>(ceilf(i - r)), 0);
-			float maxIp = std::min(static_cast<unsigned int>(i + r), nx - 1);
-			float red = 0;
-			float green = 0;
-			float blue = 0;
-			
-			for (int ip = minIp; ip <= maxIp; ++ip) {
-				float filterValue = filter->executeScaled(i - ip, scale);
-				filterValueSumRow += filterValue;
-				
-				red +=  SR[ip] * filterValue;
-				green += SG[ip] * filterValue;
-				blue += SB[ip] * filterValue;				
-			}
-
-			float filterValueSum = filterValueSumRow;
-			red = static_cast<K9::uchar>(std::max(0, std::min(255, static_cast<int>(red / filterValueSum))));
-			green = static_cast<K9::uchar>(std::max(0, std::min(255, static_cast<int>(green / filterValueSum))));
-			blue = static_cast<K9::uchar>(std::max(0, std::min(255, static_cast<int>(blue / filterValueSum))));
-
-			K9::Color32 color = K9::setColor32(red, green, blue, 255);
-			out.setColorAtXY(color, i, j);
-		}
-	}
-
-	delete[]SB;
-	delete[]SG;
-	delete[]SR;
-
-	return out;
 }
