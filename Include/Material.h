@@ -1,44 +1,49 @@
 #ifndef _MATERIAL_H_
 #define _MATERIAL_H_
 
-#include <Vector3.h>
+#include <AbstractMaterialColor.h>
+#include <memory>
+#include <SolidMaterialColor.h>
 
 namespace K9 {
 
-	typedef Vector3 Color;
-
 	class Material {
 	public:
+		using Color = AbstractMaterialColor::Color;
 		Material() :
-			Material(Color(), Color(), Color(), 0.0f, Color()) {
+			Material(SolidMaterialColor(), SolidMaterialColor(), SolidMaterialColor(), 0.0f, SolidMaterialColor()) {
 		}
 
-		Material(const Color &ka, const Color &kd, const Color &ks, float p, const Color &km) :
-			_ka(ka),
-			_kd(kd),
-			_ks(ks),
+		Material(const Color& ka, const Color&kd, const Color &ks, float p, const Color &km) :
+			Material(SolidMaterialColor(ka), SolidMaterialColor(kd), SolidMaterialColor(ks), p, SolidMaterialColor(km)) {
+		}
+
+		Material(const AbstractMaterialColor &ka, const AbstractMaterialColor &kd, const AbstractMaterialColor &ks, float p, const AbstractMaterialColor &km) :
+			_ka(ka.clone()),
+			_kd(kd.clone()),
+			_ks(ks.clone()),
 			_p(p),
-			_km(km) {
+			_km(km.clone()) {
 		}
 
 		//getters
-		const Color& ambientCoefficient() const { return _ka; }
-		Color& ambientCoefficient() { return _ka; }
-		const Color& diffuseCoefficient() const { return _kd; }
-		Color& diffuseCoefficient() { return _kd; }
-		const Color& specularCoefficient() const { return _ks; }
-		Color& specularCoefficient() { return _ks; }
+		const std::shared_ptr<AbstractMaterialColor> ambientCoefficient() const { return _ka; }
+		std::shared_ptr<AbstractMaterialColor> ambientCoefficient() { return _ka; }
+		const std::shared_ptr<AbstractMaterialColor> diffuseCoefficient() const { return _kd; }
+		std::shared_ptr<AbstractMaterialColor> diffuseCoefficient() { return _kd; }
+		const std::shared_ptr<AbstractMaterialColor> specularCoefficient() const { return _ks; }
+		std::shared_ptr<AbstractMaterialColor> specularCoefficient() { return _ks; }
 		const float& phongExponent() const { return _p; }
 		float& phongExponent() { return _p; }
-		const Color& mirrorReflection() const { return _km; }
-		Color& mirrorReflection() { return _km; }
+		const std::shared_ptr<AbstractMaterialColor> mirrorReflection() const { return _km; }
+		std::shared_ptr<AbstractMaterialColor> mirrorReflection() { return _km; }
 
 	private:
-		Color _ka;			//Ambient coefficient
-		Color _kd;			//Diffuse coefficient
-		Color _ks;			//Specular coefficient
+		std::shared_ptr<AbstractMaterialColor> _ka;			//Ambient coefficient
+		std::shared_ptr<AbstractMaterialColor> _kd;			//Diffuse coefficient
+		std::shared_ptr<AbstractMaterialColor> _ks;			//Specular coefficient
 		float _p;			//Phong exponent
-		Color _km;			//Mirror reflection
+		std::shared_ptr<AbstractMaterialColor> _km;			//Mirror reflection
 	};
 
 }

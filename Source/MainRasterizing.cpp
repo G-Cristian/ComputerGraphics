@@ -17,6 +17,7 @@
 #include <MatrixFactory.h>
 #include <memory>
 #include <PerspectiveCamera.h>
+#include <SolidMaterialColor.h>
 #include <string>
 #include <vector>
 #include <Vertex.h>
@@ -85,11 +86,11 @@ int main() {
 		}
 		Matrix4 moveMat = MatrixFactory::move(sphere1.position[0], sphere1.position[1], sphere1.position[2]);
 		for (auto it = sphere1.vertexes.begin(); it != sphere1.vertexes.end(); ++it) {
-			it->setPropertyByName("ka", Vector4(sphere1.material.ambientCoefficient(), 0.0f));
-			it->setPropertyByName("kd", Vector4(sphere1.material.diffuseCoefficient(), 0.0f));
-			it->setPropertyByName("ks", Vector4(sphere1.material.specularCoefficient(), 0.0f));
+			it->setPropertyByName("ka", Vector4(sphere1.material.ambientCoefficient()->colorAt(Vector3(0,0,0)), 0.0f));
+			it->setPropertyByName("kd", Vector4(sphere1.material.diffuseCoefficient()->colorAt(Vector3(0, 0, 0)), 0.0f));
+			it->setPropertyByName("ks", Vector4(sphere1.material.specularCoefficient()->colorAt(Vector3(0, 0, 0)), 0.0f));
 			it->setPropertyByName("p", Vector4(sphere1.material.phongExponent(), sphere1.material.phongExponent(), sphere1.material.phongExponent(), sphere1.material.phongExponent()));
-			it->setPropertyByName("km", Vector4(sphere1.material.mirrorReflection(), 0.0f));
+			it->setPropertyByName("km", Vector4(sphere1.material.mirrorReflection()->colorAt(Vector3(0, 0, 0)), 0.0f));
 			it->setPropertyByName("position", moveMat*(*it->getPropertyByName("position")));
 		}
 		vertexes.insert(std::end(vertexes), std::begin(sphere1.vertexes), std::end(sphere1.vertexes));
@@ -101,11 +102,11 @@ int main() {
 		}
 		moveMat = MatrixFactory::move(sphere2.position[0], sphere2.position[1], sphere2.position[2]);
 		for (auto it = sphere2.vertexes.begin(); it != sphere2.vertexes.end(); ++it) {
-			it->setPropertyByName("ka", Vector4(sphere2.material.ambientCoefficient(), 0.0f));
-			it->setPropertyByName("kd", Vector4(sphere2.material.diffuseCoefficient(), 0.0f));
-			it->setPropertyByName("ks", Vector4(sphere2.material.specularCoefficient(), 0.0f));
+			it->setPropertyByName("ka", Vector4(sphere2.material.ambientCoefficient()->colorAt(Vector3(0, 0, 0)), 0.0f));
+			it->setPropertyByName("kd", Vector4(sphere2.material.diffuseCoefficient()->colorAt(Vector3(0, 0, 0)), 0.0f));
+			it->setPropertyByName("ks", Vector4(sphere2.material.specularCoefficient()->colorAt(Vector3(0, 0, 0)), 0.0f));
 			it->setPropertyByName("p", Vector4(sphere2.material.phongExponent(), sphere2.material.phongExponent(), sphere2.material.phongExponent(), sphere2.material.phongExponent()));
-			it->setPropertyByName("km", Vector4(sphere2.material.mirrorReflection(), 0.0f));
+			it->setPropertyByName("km", Vector4(sphere2.material.mirrorReflection()->colorAt(Vector3(0, 0, 0)), 0.0f));
 			it->setPropertyByName("position", moveMat*(*it->getPropertyByName("position")));
 		}
 		vertexes.insert(std::end(vertexes), std::begin(sphere2.vertexes), std::end(sphere2.vertexes));
