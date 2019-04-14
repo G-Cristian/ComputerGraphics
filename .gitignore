@@ -12,3 +12,5 @@
 
 *.VC.opendb
 *.suo
+*.obj
+*.exe

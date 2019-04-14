@@ -24,20 +24,21 @@ namespace K9 {
 						float x = pos[0];
 						float y = windowHeight - pos[1] - 1;
 						::Geometry::Point2D point(x, y);
-						Vector4 col = it->properties.at("color");
-//						col = perElementProduct(it->properties.at("ka"), Vector4(gp->ambientLight(), 0.0f));
-//						for (auto lightIt = gp->lights().begin(); lightIt != gp->lights().end(); lightIt++) {
-//							Vector4 l(normalized(Vector4(lightIt->position(), 0.0f) - originalPos));
-//							Vector4 h(normalized(l + normalized(Vector4(gp->getCamera()->position(), 0.0f) - originalPos)));
-//
-//							col = col + perElementProduct(it->properties.at("kd"), Vector4(lightIt->intensity(), 0.0f)) * std::max(0.0f, dot(it->properties.at("normal"), l)) +
-//								perElementProduct(it->properties.at("ks"), Vector4(lightIt->intensity(), 0.0f)) * powf(std::max(0.0f, dot(it->properties.at("normal"), h)), (it->properties.at("p"))[0]);
-//
-//							//TODO: Test for faces pointing backwards
+						//Vector4 col = it->properties.at("color");
+						Vector4 col;
+						col = perElementProduct(it->properties.at("ka"), Vector4(gp->ambientLight(), 0.0f));
+						for (auto lightIt = gp->lights().begin(); lightIt != gp->lights().end(); lightIt++) {
+							Vector4 l(normalized(Vector4(lightIt->position(), 0.0f) - originalPos));
+							Vector4 h(normalized(l + normalized(Vector4(gp->getCamera()->position(), 0.0f) - originalPos)));
+
+							col = col + perElementProduct(it->properties.at("kd"), Vector4(lightIt->intensity(), 0.0f)) * std::max(0.0f, dot(it->properties.at("normal"), l)) +
+								perElementProduct(it->properties.at("ks"), Vector4(lightIt->intensity(), 0.0f)) * powf(std::max(0.0f, dot(it->properties.at("normal"), h)), (it->properties.at("p"))[0]);
+
+							//TODO: Test for faces pointing backwards
 //							if (dot(Vector4(gp->getCamera()->position(), 0.0f) - originalPos, it->properties.at("normal")) < 0.0f) {
 //								col = Vector4(0.0f, 0.0f, 1.0f, 1.0f);
 //							}
-//						}
+						}
 
 						float c1 = std::max(std::min(1.0f, col[0]),0.0f);
 						float c2 = std::max(std::min(1.0f, col[1]), 0.0f);

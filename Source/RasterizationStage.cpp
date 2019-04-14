@@ -44,8 +44,8 @@ namespace K9 {
 				int x1 = static_cast<int>((*parameters->vertexes()[p2].getPropertyByName("position"))[0] / (*parameters->vertexes()[p2].getPropertyByName("position"))[3]);
 				float y1 = (*parameters->vertexes()[p2].getPropertyByName("position"))[1] / (*parameters->vertexes()[p2].getPropertyByName("position"))[3];
 				float z1 = (*parameters->vertexes()[p2].getPropertyByName("position"))[2];
-				Vector4 c0 = (*parameters->vertexes()[p1].getPropertyByName("color"));
-				Vector4 c1 = (*parameters->vertexes()[p2].getPropertyByName("color"));
+//				Vector4 c0 = (*parameters->vertexes()[p1].getPropertyByName("color"));
+//				Vector4 c1 = (*parameters->vertexes()[p2].getPropertyByName("color"));
 
 				Vector4 n0 = (*parameters->vertexes()[p1].getPropertyByName("normal"));
 				Vector4 n1 = (*parameters->vertexes()[p2].getPropertyByName("normal"));
@@ -57,7 +57,7 @@ namespace K9 {
 					swap(x0, x1);
 					swap(y0, y1);
 					swap(z0, z1);
-					swap(c0, c1);
+//					swap(c0, c1);
 				}
 
 				float m = static_cast<float>(y1 - y0) / (x1 - x0);
@@ -71,7 +71,7 @@ namespace K9 {
 					for (int y = y0; y >= y1; --y) {
 						FragmentProcessingStageParameters::Fragment fragment;
 						fragment.properties["position"] = Vector4(x, y, z0 * (1 - (y - y0)*scale) + z1*(y - y0)*scale, 0.0f);
-						fragment.properties["color"] = c0*(1 - (y - y0)*scale) + c1*(y - y0)*scale;
+//						fragment.properties["color"] = c0*(1 - (y - y0)*scale) + c1*(y - y0)*scale;
 						fragment.properties["normal"] = n0*(1 - (y - y0)*scale) + n1*(y - y0)*scale;
 						fragment.properties["originalPosition"] = originalPos0*(1 - (y - y0)*scale) + originalPos1*(y - y0)*scale;
 						fragment.properties["ka"] = *parameters->vertexes()[p1].getPropertyByName("ka");
@@ -97,7 +97,7 @@ namespace K9 {
 					for (int x = x0; x <= x1; ++x) {
 						FragmentProcessingStageParameters::Fragment fragment;
 						fragment.properties["position"] = Vector4(x, y, z0 * (1 - (x - x0)*scale) + z1*(x - x0)*scale, 0.0f);
-						fragment.properties["color"] = c0*(1 - (x - x0)*scale) + c1*(x - x0)*scale;
+//						fragment.properties["color"] = c0*(1 - (x - x0)*scale) + c1*(x - x0)*scale;
 						fragment.properties["normal"] = n0*(1 - (x - x0)*scale) + n1*(x - x0)*scale;
 						fragment.properties["originalPosition"] = originalPos0*(1 - (x - x0)*scale) + originalPos1*(x - x0)*scale;
 						fragment.properties["ka"] = *parameters->vertexes()[p1].getPropertyByName("ka");
@@ -123,7 +123,7 @@ namespace K9 {
 					for (int x = x0; x <= x1; ++x) {
 						FragmentProcessingStageParameters::Fragment fragment;
 						fragment.properties["position"] = Vector4(x, y, z0 * (1 - (x - x0)*scale) + z1*(x - x0)*scale, 0.0f);
-						fragment.properties["color"] = c0*(1 - (x - x0)*scale) + c1*(x - x0)*scale;
+//						fragment.properties["color"] = c0*(1 - (x - x0)*scale) + c1*(x - x0)*scale;
 						fragment.properties["normal"] = n0*(1 - (x - x0)*scale) + n1*(x - x0)*scale;
 						fragment.properties["originalPosition"] = originalPos0*(1 - (x - x0)*scale) + originalPos1*(x - x0)*scale;
 						fragment.properties["ka"] = *parameters->vertexes()[p1].getPropertyByName("ka");
@@ -149,7 +149,7 @@ namespace K9 {
 					for (int y = y0; y <= y1; ++y) {
 						FragmentProcessingStageParameters::Fragment fragment;
 						fragment.properties["position"] = Vector4(x, y, z0 * (1 - (y - y0)*scale) + z1*(y - y0)*scale, 0.0f);
-						fragment.properties["color"] = c0*(1 - (y - y0)*scale) + c1*(y - y0)*scale;
+//						fragment.properties["color"] = c0*(1 - (y - y0)*scale) + c1*(y - y0)*scale;
 						fragment.properties["normal"] = n0*(1 - (y - y0)*scale) + n1*(y - y0)*scale;
 						fragment.properties["originalPosition"] = originalPos0*(1 - (y - y0)*scale) + originalPos1*(y - y0)*scale;
 						fragment.properties["ka"] = *parameters->vertexes()[p1].getPropertyByName("ka");
@@ -185,9 +185,9 @@ namespace K9 {
 				Vector4 posV1 = (*(parameters->vertexes()[p2].getPropertyByName("position"))) / (*(parameters->vertexes()[p2].getPropertyByName("position")))[3];
 				Vector4 posV2 = (*(parameters->vertexes()[p3].getPropertyByName("position"))) / (*(parameters->vertexes()[p3].getPropertyByName("position")))[3];
 
-				Vector4 c0 = (*parameters->vertexes()[p1].getPropertyByName("color"));
-				Vector4 c1 = (*parameters->vertexes()[p2].getPropertyByName("color"));
-				Vector4 c2 = (*parameters->vertexes()[p3].getPropertyByName("color"));
+//				Vector4 c0 = (*parameters->vertexes()[p1].getPropertyByName("color"));
+//				Vector4 c1 = (*parameters->vertexes()[p2].getPropertyByName("color"));
+//				Vector4 c2 = (*parameters->vertexes()[p3].getPropertyByName("color"));
 
 				Vector4 n0 = (*parameters->vertexes()[p1].getPropertyByName("normal"));
 				Vector4 n1 = (*parameters->vertexes()[p2].getPropertyByName("normal"));
@@ -237,7 +237,7 @@ namespace K9 {
 
 									FragmentProcessingStageParameters::Fragment fragment;
 									fragment.properties["position"] = Vector4(x, y, posV0[2] * alpha + posV1[2] * beta + posV2[2] * gamma, 0.0f);
-									fragment.properties["color"] = c0*alpha + c1*beta + c2*gamma;
+//									fragment.properties["color"] = c0*alpha + c1*beta + c2*gamma;
 									fragment.properties["normal"] = normalized(n0*alpha + n1*beta + n2*gamma);
 									fragment.properties["originalPosition"] = originalPos0*alpha + originalPos1*beta + originalPos2*gamma;
 									fragment.properties["ka"] = *parameters->vertexes()[p1].getPropertyByName("ka");

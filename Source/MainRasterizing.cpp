@@ -32,19 +32,21 @@ int main() {
 	float width = 1366;
 	float height = 768;
 
-	window.name = name;
-	window.width = width;
-	window.height = height;
-
-	Renderer renderer(window);
-
-	float hipo = 150.0f / cosf(M_PI_4);
+	float hipo = 271.0f / cosf(M_PI_4);
 	float height_2 = sinf(M_PI_4)* hipo;
 	float width_2 = height_2 * width / height;
 
-	//Camera::ImagePlane imagePlane = { -width_2, -height_2, width_2 * 2, height_2 * 2 };
-	Camera::ImagePlane imagePlane = { -width/2, -height/2, width , height  };
-	Camera *camera = new PerspectiveCamera(Vector3(0, 0, 0), Vector3(0, 1, 0), -Vector3(0.0f, 0.0f, 1.0f), imagePlane, -150);
+	window.name = name;
+	//window.width = width;
+	//window.height = height;
+	window.width = width_2*2.0f;
+	window.height = height_2*2.0f;
+
+	Renderer renderer(window);
+
+	Camera::ImagePlane imagePlane = { -width_2, -height_2, width_2 * 2, height_2 * 2 };
+	//Camera::ImagePlane imagePlane = { -width/2, -height/2, width , height  };
+	Camera *camera = new PerspectiveCamera(Vector3(0, 0, 0), Vector3(0, 1, 0), -Vector3(0.0f, 0.0f, 1.0f), imagePlane, -271.0f);
 
 	Light light(Vector3(-150.0f, 150.0f, -250), Vector3(1.0f, 1.0f, 1.0f));
 	Light light2(Vector3(-200.0f, 200.0f, -100), Vector3(0.8f, 0.8f, 0.8f));
