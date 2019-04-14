@@ -64,6 +64,16 @@ namespace K9 {
 			return ret;
 		}
 
+		Vector4* getPropertyByName(const std::string &propertyName) {
+			Vector4 *ret = nullptr;
+			auto it = _properties->find(propertyName);
+			if (it != _properties->end()) {
+				ret = &(it->second);
+			}
+
+			return ret;
+		}
+
 		//setters
 		void setPropertyByName(const std::string &propertyName, const Vector4 &value) {
 			(*_properties)[propertyName] = value;
