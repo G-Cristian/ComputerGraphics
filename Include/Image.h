@@ -45,6 +45,81 @@ namespace K9 {
 		unsigned int getWidth() const { return _width; }
 		unsigned int getHeight() const { return _height; }
 
+		class IIterator {
+		public:
+			IIterator(ElementsType *pos) :_pos(pos) {
+			}
+			virtual ~IIterator() = default;
+			
+			bool operator==(const IIterator& r) const{
+				return this->_pos == r._pos;
+			}
+
+			bool operator!=(const IIterator& r) const {
+				return !(*this == r);
+			}
+
+			virtual IIterator& operator++() = 0;
+			virtual const ElementsType at(size_t i) const = 0;
+			virtual ElementsType& at(size_t i) = 0;
+		protected:
+			ElementsType *_pos;
+		};
+
+		class RowIterator:public IIterator {
+		public:
+			RowIterator(ElementsType *pos, size_t imageWidth):
+				IIterator(pos),
+				_width(imageWidth){
+			}
+			virtual ~RowIterator() = default;
+
+			RowIterator& operator++() override final {
+				_pos += _width;
+				return *this;
+			}
+
+			const ElementsType at(size_t i) const override final {
+				return *(_pos + i);
+			}
+			ElementsType& at(size_t i) override final {
+				return *(_pos + i);
+			}
+		private:
+			size_t _width;
+		};
+
+		class ColumnIterator :public IIterator {
+		public:
+			ColumnIterator(ElementsType *pos, size_t imageWidth) :
+				IIterator(pos),
+				_width(imageWidth) {
+			}
+			virtual ~ColumnIterator() = default;
+
+			ColumnIterator& operator++() override final {
+				++_pos;
+				return *this;
+			}
+
+			const ElementsType at(size_t i) const override final {
+				return *(_pos + _width*i);
+			}
+			ElementsType& at(size_t i) override final {
+				return *(_pos + _width*i);
+			}
+		private:
+			size_t _width;
+		};
+
+		RowIterator rowInter(size_t rowI) {
+			return RowIterator(_image + _width*rowI, _width);
+		}
+
+		ColumnIterator columnI(size_t columnI) {
+			return ColumnIterator(_image + columnI, _width);
+		}
+
 	private:
 		//copy helpers
 		ElementsType *copyImage(const ElementsType *image, size_t size) const;

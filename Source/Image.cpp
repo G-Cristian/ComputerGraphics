@@ -9,7 +9,7 @@ namespace K9 {
 	Image::Image(unsigned int width, unsigned int height) :
 		_width(width)
 		, _height(height) {
-		_image = new ElementsType[_width*_height]();
+		_image = new ElementsType[_width*_height];
 	}
 
 	Image::Image(const Image &other) :
@@ -28,6 +28,7 @@ namespace K9 {
 	Image::~Image() {
 		delete[] _image;
 		_image = nullptr;
+
 	}
 
 	Image& Image::operator=(const Image &other) {
