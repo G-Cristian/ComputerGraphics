@@ -1,16 +1,16 @@
 #ifndef _ABSTRACTMATERIALCOLOR_H_
 #define _ABSTRACTMATERIALCOLOR_H_
 
-#include <Vector3.h>
+#include <Vector4.h>
 
 namespace K9 {
 	class AbstractMaterialColor {
 	public:
-		typedef Vector3 Color;
+		typedef Vector4 Color;
 
 		virtual ~AbstractMaterialColor() = default;
 
-		virtual const Color& colorAt(const Vector3 &coordinate) const = 0;
+		virtual Color colorAt(float u, float v) const = 0;
 		virtual AbstractMaterialColor* clone() const = 0;
 	protected:
 		AbstractMaterialColor() = default;

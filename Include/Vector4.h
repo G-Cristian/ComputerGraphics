@@ -14,6 +14,13 @@ namespace K9 {
 		Vector4() :
 			Vector4(0.0f, 0.0f, 0.0f, 0.0f) {
 		}
+		Vector4(ElementsType fillValue) {
+			_vectorImp.x = fillValue;
+			_vectorImp.y = fillValue;
+			_vectorImp.z = fillValue;
+			_vectorImp.w = fillValue;
+			//std::cout << "Vector4 constructor 1" << std::endl;
+		}
 		Vector4(ElementsType x, ElementsType y, ElementsType z, ElementsType w) {
 			_vectorImp.x = x;
 			_vectorImp.y = y;

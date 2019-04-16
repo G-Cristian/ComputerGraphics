@@ -3,6 +3,7 @@
 
 #include <Vector4.h>
 #include <map>
+#include <Material.h>
 #include <string>
 
 namespace K9 {
@@ -16,20 +17,24 @@ namespace K9 {
 
 		//copy constructor
 		Vertex(const Vertex &other) :
-			_properties(new PropertiesType()) {
+			_properties(new PropertiesType()),
+			_material(other._material){
 			(*_properties) = *other._properties;
 		}
 
 		//move constructor
 		Vertex(Vertex &&other) noexcept :
-		_properties(other._properties) {
+		_properties(other._properties),
+		_material(std::move(other._material)) {
 			other._properties = nullptr;
+			other._material = nullptr;
 		}
 
 		//destructor
 		~Vertex() {
 			delete _properties;
 			_properties = nullptr;
+			_material = nullptr;
 		}
 
 		//copy assignment operator
@@ -38,6 +43,7 @@ namespace K9 {
 			delete _properties;
 			(*aux) = *other._properties;
 			_properties = aux;
+			_material = other._material;
 
 			return *this;
 		}
@@ -48,6 +54,8 @@ namespace K9 {
 				delete _properties;
 				_properties = other._properties;
 				other._properties = nullptr;
+				_material = std::move(other._material);
+				other._material = nullptr;
 			}
 
 			return *this;
@@ -74,13 +82,25 @@ namespace K9 {
 			return ret;
 		}
 
+		const std::shared_ptr<const Material> getMaterial() const {
+			return _material;
+		}
+
 		//setters
 		void setPropertyByName(const std::string &propertyName, const Vector4 &value) {
 			(*_properties)[propertyName] = value;
 		}
 
+		void setMaterial(const Material& material) {
+			_material = std::shared_ptr<Material>(new Material(material));
+		}
+
+		void setMaterial(Material&& material) {
+			_material = std::shared_ptr<Material>(new Material(std::move(material)));
+		}
 	private:
 		PropertiesType *_properties;
+		std::shared_ptr<Material> _material;
 	};
 }
 

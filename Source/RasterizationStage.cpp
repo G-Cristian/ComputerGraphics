@@ -74,10 +74,19 @@ namespace K9 {
 //						fragment.properties["color"] = c0*(1 - (y - y0)*scale) + c1*(y - y0)*scale;
 						fragment.properties["normal"] = n0*(1 - (y - y0)*scale) + n1*(y - y0)*scale;
 						fragment.properties["originalPosition"] = originalPos0*(1 - (y - y0)*scale) + originalPos1*(y - y0)*scale;
-						fragment.properties["ka"] = *parameters->vertexes()[p1].getPropertyByName("ka");
+						/*fragment.properties["ka"] = *parameters->vertexes()[p1].getPropertyByName("ka");
 						fragment.properties["kd"] = *parameters->vertexes()[p1].getPropertyByName("kd");
 						fragment.properties["ks"] = *parameters->vertexes()[p1].getPropertyByName("ks");
-						fragment.properties["p"] = *parameters->vertexes()[p1].getPropertyByName("p");
+						fragment.properties["p"] = *parameters->vertexes()[p1].getPropertyByName("p");*/
+						const Vector4 *tc1 = parameters->vertexes()[p1].getPropertyByName("textureCoord");
+						const Vector4 *tc2 = parameters->vertexes()[p2].getPropertyByName("textureCoord");
+						if (tc1 != nullptr && tc2 != nullptr) {
+							Vector4 tcInterpolated = (*tc1) * (1 - (y - y0)*scale) + (*tc2)*(y - y0)*scale;
+							fragment.properties["ka"] = parameters->vertexes()[p1].getMaterial()->ambientCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
+							fragment.properties["kd"] = parameters->vertexes()[p1].getMaterial()->diffuseCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
+							fragment.properties["ks"] = parameters->vertexes()[p1].getMaterial()->specularCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
+							fragment.properties["p"] = Vector4(parameters->vertexes()[p1].getMaterial()->phongExponent());
+						}
 						outFragments.push_back(fragment);
 						if (d < 0.0f) {
 							x = x + 1.0f;
@@ -100,10 +109,20 @@ namespace K9 {
 //						fragment.properties["color"] = c0*(1 - (x - x0)*scale) + c1*(x - x0)*scale;
 						fragment.properties["normal"] = n0*(1 - (x - x0)*scale) + n1*(x - x0)*scale;
 						fragment.properties["originalPosition"] = originalPos0*(1 - (x - x0)*scale) + originalPos1*(x - x0)*scale;
-						fragment.properties["ka"] = *parameters->vertexes()[p1].getPropertyByName("ka");
+						/*fragment.properties["ka"] = *parameters->vertexes()[p1].getPropertyByName("ka");
 						fragment.properties["kd"] = *parameters->vertexes()[p1].getPropertyByName("kd");
 						fragment.properties["ks"] = *parameters->vertexes()[p1].getPropertyByName("ks");
-						fragment.properties["p"] = *parameters->vertexes()[p1].getPropertyByName("p");
+						fragment.properties["p"] = *parameters->vertexes()[p1].getPropertyByName("p");*/
+
+						const Vector4 *tc1 = parameters->vertexes()[p1].getPropertyByName("textureCoord");
+						const Vector4 *tc2 = parameters->vertexes()[p2].getPropertyByName("textureCoord");
+						if (tc1 != nullptr && tc2 != nullptr) {
+							Vector4 tcInterpolated = (*tc1) * (1 - (y - y0)*scale) + (*tc2)*(y - y0)*scale;
+							fragment.properties["ka"] = parameters->vertexes()[p1].getMaterial()->ambientCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
+							fragment.properties["kd"] = parameters->vertexes()[p1].getMaterial()->diffuseCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
+							fragment.properties["ks"] = parameters->vertexes()[p1].getMaterial()->specularCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
+							fragment.properties["p"] = Vector4(parameters->vertexes()[p1].getMaterial()->phongExponent());
+						}
 						outFragments.push_back(fragment);
 						if (d > 0.0f) {
 							y = y - 1.0f;
@@ -126,10 +145,19 @@ namespace K9 {
 //						fragment.properties["color"] = c0*(1 - (x - x0)*scale) + c1*(x - x0)*scale;
 						fragment.properties["normal"] = n0*(1 - (x - x0)*scale) + n1*(x - x0)*scale;
 						fragment.properties["originalPosition"] = originalPos0*(1 - (x - x0)*scale) + originalPos1*(x - x0)*scale;
-						fragment.properties["ka"] = *parameters->vertexes()[p1].getPropertyByName("ka");
+						/*fragment.properties["ka"] = *parameters->vertexes()[p1].getPropertyByName("ka");
 						fragment.properties["kd"] = *parameters->vertexes()[p1].getPropertyByName("kd");
 						fragment.properties["ks"] = *parameters->vertexes()[p1].getPropertyByName("ks");
-						fragment.properties["p"] = *parameters->vertexes()[p1].getPropertyByName("p");
+						fragment.properties["p"] = *parameters->vertexes()[p1].getPropertyByName("p");*/
+						const Vector4 *tc1 = parameters->vertexes()[p1].getPropertyByName("textureCoord");
+						const Vector4 *tc2 = parameters->vertexes()[p2].getPropertyByName("textureCoord");
+						if (tc1 != nullptr && tc2 != nullptr) {
+							Vector4 tcInterpolated = (*tc1) * (1 - (y - y0)*scale) + (*tc2)*(y - y0)*scale;
+							fragment.properties["ka"] = parameters->vertexes()[p1].getMaterial()->ambientCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
+							fragment.properties["kd"] = parameters->vertexes()[p1].getMaterial()->diffuseCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
+							fragment.properties["ks"] = parameters->vertexes()[p1].getMaterial()->specularCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
+							fragment.properties["p"] = Vector4(parameters->vertexes()[p1].getMaterial()->phongExponent());
+						}
 						outFragments.push_back(fragment);
 						if (d < 0.0f) {
 							y = y + 1.0f;
@@ -152,10 +180,19 @@ namespace K9 {
 //						fragment.properties["color"] = c0*(1 - (y - y0)*scale) + c1*(y - y0)*scale;
 						fragment.properties["normal"] = n0*(1 - (y - y0)*scale) + n1*(y - y0)*scale;
 						fragment.properties["originalPosition"] = originalPos0*(1 - (y - y0)*scale) + originalPos1*(y - y0)*scale;
-						fragment.properties["ka"] = *parameters->vertexes()[p1].getPropertyByName("ka");
+						/*fragment.properties["ka"] = *parameters->vertexes()[p1].getPropertyByName("ka");
 						fragment.properties["kd"] = *parameters->vertexes()[p1].getPropertyByName("kd");
 						fragment.properties["ks"] = *parameters->vertexes()[p1].getPropertyByName("ks");
-						fragment.properties["p"] = *parameters->vertexes()[p1].getPropertyByName("p");
+						fragment.properties["p"] = *parameters->vertexes()[p1].getPropertyByName("p");*/
+						const Vector4 *tc1 = parameters->vertexes()[p1].getPropertyByName("textureCoord");
+						const Vector4 *tc2 = parameters->vertexes()[p2].getPropertyByName("textureCoord");
+						if (tc1 != nullptr && tc2 != nullptr) {
+							Vector4 tcInterpolated = (*tc1) * (1 - (y - y0)*scale) + (*tc2)*(y - y0)*scale;
+							fragment.properties["ka"] = parameters->vertexes()[p1].getMaterial()->ambientCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
+							fragment.properties["kd"] = parameters->vertexes()[p1].getMaterial()->diffuseCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
+							fragment.properties["ks"] = parameters->vertexes()[p1].getMaterial()->specularCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
+							fragment.properties["p"] = Vector4(parameters->vertexes()[p1].getMaterial()->phongExponent());
+						}
 						outFragments.push_back(fragment);
 						if (d > 0.0f) {
 							x = x + 1.0f;
@@ -240,10 +277,20 @@ namespace K9 {
 //									fragment.properties["color"] = c0*alpha + c1*beta + c2*gamma;
 									fragment.properties["normal"] = normalized(n0*alpha + n1*beta + n2*gamma);
 									fragment.properties["originalPosition"] = originalPos0*alpha + originalPos1*beta + originalPos2*gamma;
-									fragment.properties["ka"] = *parameters->vertexes()[p1].getPropertyByName("ka");
+									/*fragment.properties["ka"] = *parameters->vertexes()[p1].getPropertyByName("ka");
 									fragment.properties["kd"] = *parameters->vertexes()[p1].getPropertyByName("kd");
 									fragment.properties["ks"] = *parameters->vertexes()[p1].getPropertyByName("ks");
-									fragment.properties["p"] = *parameters->vertexes()[p1].getPropertyByName("p");
+									fragment.properties["p"] = *parameters->vertexes()[p1].getPropertyByName("p");*/
+									const Vector4 *tc1 = parameters->vertexes()[p1].getPropertyByName("textureCoord");
+									const Vector4 *tc2 = parameters->vertexes()[p2].getPropertyByName("textureCoord");
+									const Vector4 *tc3 = parameters->vertexes()[p3].getPropertyByName("textureCoord");
+									if (tc1 != nullptr && tc2 != nullptr) {
+										Vector4 tcInterpolated = (*tc1) * alpha + (*tc2)*beta + (*tc3)*gamma;
+										fragment.properties["ka"] = parameters->vertexes()[p1].getMaterial()->ambientCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
+										fragment.properties["kd"] = parameters->vertexes()[p1].getMaterial()->diffuseCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
+										fragment.properties["ks"] = parameters->vertexes()[p1].getMaterial()->specularCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
+										fragment.properties["p"] = Vector4(parameters->vertexes()[p1].getMaterial()->phongExponent());
+									}
 							//		if ((c0*alpha + c1*beta + c2*gamma)[0] > 1.005f ) {
 								//		std::cout << "alpha + beta + gamma = " << alpha + beta + gamma << std::endl;
 								//		fragment.properties["color"] = Vector4(0.0f, 0.0f, 1.0f, 1.0f);

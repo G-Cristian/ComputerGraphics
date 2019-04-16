@@ -23,6 +23,8 @@
 #include <Vertex.h>
 #include <VertexProcessingStageCommand.h>
 
+void addMesh(K9::Geometry::Geometry& mesh);
+void addMeshWireframe(K9::Geometry::Geometry& mesh);
 
 int main() {
 	using namespace K9;
@@ -55,11 +57,11 @@ int main() {
 
 	::K9::Geometry::Geometry sphere1 = ::K9::Geometry::GeometryFactory::sphere(200, 55, 55);
 	sphere1.position = Vector4(0.0f, 0.0f, -300.0f, 1.0f);
-	sphere1.material = Material(Vector3(0.5f, 0.0f, 0.0f), Vector3(1.0f, 0.0f, 0.0f), Vector3(0.8f, 0.8f, 0.8f), 70, Vector3(0.0f, 0.0f, 0.0f));
+	sphere1.material = Material(Vector4(0.5f, 0.0f, 0.0f, 1.0f), Vector4(1.0f, 0.0f, 0.0f, 1.0f), Vector4(0.8f, 0.8f, 0.8f, 1.0f), 70, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
 	
 	::K9::Geometry::Geometry sphere2 = ::K9::Geometry::GeometryFactory::sphere(200, 55, 55);
 	sphere2.position = Vector4(600.0f, 90.0f, -400.0f, 1.0f);
-	sphere2.material = Material(Vector3(0.5f, 0.0f, 0.0f), Vector3(1.0f, 0.0f, 0.0f), Vector3(0.5f, 0.5f, 0.5f), 100, Vector3(0.2f, 0.2f, 0.2f));
+	sphere2.material = Material(Vector4(0.5f, 0.0f, 0.0f, 1.0f), Vector4(1.0f, 0.0f, 0.0f, 1.0f), Vector4(0.5f, 0.5f, 0.5f, 1.0f), 100, Vector4(0.2f, 0.2f, 0.2f, 1.0f));
 	//Geometry::Geometry plane1 = Geometry::GeometryFactory::plane(1000, 1000, 10);
 	//Geometry::Geometry plane2 = Geometry::GeometryFactory::plane(1000, 1000, 5);
 
@@ -78,38 +80,9 @@ int main() {
 		
 		gp->vertexProcessingStageCommand() = std::make_shared<GraphicsPipeline::VertexProcessingStageCommand>(GraphicsPipeline::VertexProcessingStageCommand());
 
-		std::vector<Vertex> &vertexes = gp->getVertexes();
-		std::vector<std::shared_ptr<GraphicsPipeline::IRasterizationCommand> > &rasterizationCommands = gp->rasterizationCommands();
-		
-		for (int i = 0; i < sphere1.conections.size()-2; i += 3) {
-			rasterizationCommands.push_back(std::make_shared<GraphicsPipeline::DrawTriangleRasterizationCommand>(sphere1.conections[i], sphere1.conections[i+1], sphere1.conections[i+2], vertexes.size()));
-		}
-		Matrix4 moveMat = MatrixFactory::move(sphere1.position[0], sphere1.position[1], sphere1.position[2]);
-		for (auto it = sphere1.vertexes.begin(); it != sphere1.vertexes.end(); ++it) {
-			it->setPropertyByName("ka", Vector4(sphere1.material.ambientCoefficient()->colorAt(Vector3(0,0,0)), 0.0f));
-			it->setPropertyByName("kd", Vector4(sphere1.material.diffuseCoefficient()->colorAt(Vector3(0, 0, 0)), 0.0f));
-			it->setPropertyByName("ks", Vector4(sphere1.material.specularCoefficient()->colorAt(Vector3(0, 0, 0)), 0.0f));
-			it->setPropertyByName("p", Vector4(sphere1.material.phongExponent(), sphere1.material.phongExponent(), sphere1.material.phongExponent(), sphere1.material.phongExponent()));
-			it->setPropertyByName("km", Vector4(sphere1.material.mirrorReflection()->colorAt(Vector3(0, 0, 0)), 0.0f));
-			it->setPropertyByName("position", moveMat*(*it->getPropertyByName("position")));
-		}
-		vertexes.insert(std::end(vertexes), std::begin(sphere1.vertexes), std::end(sphere1.vertexes));
+		addMesh(sphere1);
+		addMeshWireframe(sphere2);
 
-		for (int i = 0; i < sphere2.conections.size() - 2; i += 3) {
-			rasterizationCommands.push_back(std::make_shared<GraphicsPipeline::DrawLineRasterizationCommand>(sphere2.conections[i], sphere2.conections[i + 1], vertexes.size()));
-			rasterizationCommands.push_back(std::make_shared<GraphicsPipeline::DrawLineRasterizationCommand>(sphere2.conections[i+1], sphere2.conections[i + 2], vertexes.size()));
-			rasterizationCommands.push_back(std::make_shared<GraphicsPipeline::DrawLineRasterizationCommand>(sphere2.conections[i + 2], sphere2.conections[i], vertexes.size()));
-		}
-		moveMat = MatrixFactory::move(sphere2.position[0], sphere2.position[1], sphere2.position[2]);
-		for (auto it = sphere2.vertexes.begin(); it != sphere2.vertexes.end(); ++it) {
-			it->setPropertyByName("ka", Vector4(sphere2.material.ambientCoefficient()->colorAt(Vector3(0, 0, 0)), 0.0f));
-			it->setPropertyByName("kd", Vector4(sphere2.material.diffuseCoefficient()->colorAt(Vector3(0, 0, 0)), 0.0f));
-			it->setPropertyByName("ks", Vector4(sphere2.material.specularCoefficient()->colorAt(Vector3(0, 0, 0)), 0.0f));
-			it->setPropertyByName("p", Vector4(sphere2.material.phongExponent(), sphere2.material.phongExponent(), sphere2.material.phongExponent(), sphere2.material.phongExponent()));
-			it->setPropertyByName("km", Vector4(sphere2.material.mirrorReflection()->colorAt(Vector3(0, 0, 0)), 0.0f));
-			it->setPropertyByName("position", moveMat*(*it->getPropertyByName("position")));
-		}
-		vertexes.insert(std::end(vertexes), std::begin(sphere2.vertexes), std::end(sphere2.vertexes));
 		
 		/*
 		Vertex v1;
@@ -163,4 +136,54 @@ int main() {
 	delete camera;
 
 	return 0;
+}
+
+void addMesh(K9::Geometry::Geometry& mesh) {
+	using namespace K9;
+	auto gp = GraphicsPipeline::GraphicsPipeline::getInstance().lock();
+	if (gp != nullptr) {
+		std::vector<Vertex> &vertexes = gp->getVertexes();
+		std::vector<std::shared_ptr<GraphicsPipeline::IRasterizationCommand> > &rasterizationCommands = gp->rasterizationCommands();
+
+		for (int i = 0; i < mesh.conections.size() - 2; i += 3) {
+			rasterizationCommands.push_back(std::make_shared<GraphicsPipeline::DrawTriangleRasterizationCommand>(mesh.conections[i], mesh.conections[i + 1], mesh.conections[i + 2], vertexes.size()));
+		}
+		Matrix4 moveMat = MatrixFactory::move(mesh.position[0], mesh.position[1], mesh.position[2]);
+		for (auto it = mesh.vertexes.begin(); it != mesh.vertexes.end(); ++it) {
+			//it->setPropertyByName("ka", Vector4(sphere1.material.ambientCoefficient()->colorAt(0,0), 0.0f));
+			//it->setPropertyByName("kd", Vector4(sphere1.material.diffuseCoefficient()->colorAt(0, 0), 0.0f));
+			//it->setPropertyByName("ks", Vector4(sphere1.material.specularCoefficient()->colorAt(0, 0), 0.0f));
+			//it->setPropertyByName("p", Vector4(sphere1.material.phongExponent(), sphere1.material.phongExponent(), sphere1.material.phongExponent(), sphere1.material.phongExponent()));
+			//it->setPropertyByName("km", Vector4(sphere1.material.mirrorReflection()->colorAt(0, 0), 0.0f));
+			it->setMaterial(mesh.material);
+			it->setPropertyByName("position", moveMat*(*it->getPropertyByName("position")));
+		}
+		vertexes.insert(std::end(vertexes), std::begin(mesh.vertexes), std::end(mesh.vertexes));
+	}
+}
+
+void addMeshWireframe(K9::Geometry::Geometry& mesh) {
+	using namespace K9;
+	auto gp = GraphicsPipeline::GraphicsPipeline::getInstance().lock();
+	if (gp != nullptr) {
+		std::vector<Vertex> &vertexes = gp->getVertexes();
+		std::vector<std::shared_ptr<GraphicsPipeline::IRasterizationCommand> > &rasterizationCommands = gp->rasterizationCommands();
+
+		for (int i = 0; i < mesh.conections.size() - 2; i += 3) {
+			rasterizationCommands.push_back(std::make_shared<GraphicsPipeline::DrawLineRasterizationCommand>(mesh.conections[i], mesh.conections[i + 1], vertexes.size()));
+			rasterizationCommands.push_back(std::make_shared<GraphicsPipeline::DrawLineRasterizationCommand>(mesh.conections[i + 1], mesh.conections[i + 2], vertexes.size()));
+			rasterizationCommands.push_back(std::make_shared<GraphicsPipeline::DrawLineRasterizationCommand>(mesh.conections[i + 2], mesh.conections[i], vertexes.size()));
+		}
+		Matrix4 moveMat = MatrixFactory::move(mesh.position[0], mesh.position[1], mesh.position[2]);
+		for (auto it = mesh.vertexes.begin(); it != mesh.vertexes.end(); ++it) {
+			/*it->setPropertyByName("ka", Vector4(sphere2.material.ambientCoefficient()->colorAt(0, 0), 0.0f));
+			it->setPropertyByName("kd", Vector4(sphere2.material.diffuseCoefficient()->colorAt(0, 0), 0.0f));
+			it->setPropertyByName("ks", Vector4(sphere2.material.specularCoefficient()->colorAt(0, 0), 0.0f));
+			it->setPropertyByName("p", Vector4(sphere2.material.phongExponent(), sphere2.material.phongExponent(), sphere2.material.phongExponent(), sphere2.material.phongExponent()));
+			it->setPropertyByName("km", Vector4(sphere2.material.mirrorReflection()->colorAt(0, 0), 0.0f));*/
+			it->setMaterial(mesh.material);
+			it->setPropertyByName("position", moveMat*(*it->getPropertyByName("position")));
+		}
+		vertexes.insert(std::end(vertexes), std::begin(mesh.vertexes), std::end(mesh.vertexes));
+	}
 }

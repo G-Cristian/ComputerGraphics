@@ -34,10 +34,12 @@ namespace K9 {
 				Vector4 originalPos = *inVertex.getPropertyByName("position");
 				//originalPos[3] = 0.0f;
 				outVertex.setPropertyByName("originalPosition", originalPos);
-				outVertex.setPropertyByName("ka", *inVertex.getPropertyByName("ka"));
-				outVertex.setPropertyByName("kd", *inVertex.getPropertyByName("kd"));
-				outVertex.setPropertyByName("ks", *inVertex.getPropertyByName("ks"));
-				outVertex.setPropertyByName("p", *inVertex.getPropertyByName("p"));
+				//outVertex.setPropertyByName("ka", *inVertex.getPropertyByName("ka"));
+				//outVertex.setPropertyByName("kd", *inVertex.getPropertyByName("kd"));
+				//outVertex.setPropertyByName("ks", *inVertex.getPropertyByName("ks"));
+				//outVertex.setPropertyByName("p", *inVertex.getPropertyByName("p"));
+				outVertex.setMaterial(*inVertex.getMaterial());
+				outVertex.setPropertyByName("textureCoord", *inVertex.getPropertyByName("textureCoord"));
 				outVertex.setPropertyByName("position", MView*MProj*MCam*(*inVertex.getPropertyByName("position")));
 //				outVertex.setPropertyByName("color", Vector4(std::min(1.0f, color[0]), std::min(1.0f, color[1]), std::min(1.0f, color[2]), std::min(1.0f, color[3])));
 				outVertex.setPropertyByName("normal", *inVertex.getPropertyByName("normal"));

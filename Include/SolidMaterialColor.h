@@ -37,7 +37,7 @@ namespace K9 {
 
 		virtual ~SolidMaterialColor() = default;
 
-		const Color& colorAt(const Vector3 &coordinate) const override final {
+		Color colorAt(float u, float v) const override final {
 			return _color;
 		}
 
