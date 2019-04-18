@@ -10,6 +10,8 @@
 #include <DrawTriangleRasterizationCommand.h>
 #include <GeometryFactory.h>
 #include <GraphicsPipeline.h>
+#include <Image.h>
+#include <ImageOperations.h>
 #include <IRasterizationCommand.h>
 #include <Light.h>
 #include <Material.h>
@@ -18,6 +20,7 @@
 #include <memory>
 #include <PerspectiveCamera.h>
 #include <SolidMaterialColor.h>
+#include <TextureMaterialColor.h>
 #include <string>
 #include <vector>
 #include <Vertex.h>
@@ -26,8 +29,14 @@
 void addMesh(K9::Geometry::Geometry& mesh);
 void addMeshWireframe(K9::Geometry::Geometry& mesh);
 
+K9::Image openImage(const string &path);
+K9::Image initImage(uchar *img, int cols, int rows);
+
 int main() {
 	using namespace K9;
+
+	K9::Image texture1 = openImage("C:\\Users\\Cristian\\Documents\\GitHub\\ComputerGraphics\\Textures\\testing.png");
+	K9::Image texture2 = openImage("C:\\Users\\Cristian\\Documents\\GitHub\\ComputerGraphics\\Textures\\Planet.jpg");
 
 	Renderer::Window window;
 
@@ -55,13 +64,21 @@ int main() {
 	Light light2(Vector3(-200.0f, 200.0f, -100), Vector3(0.8f, 0.8f, 0.8f));
 	K9::Color ambientLight(0.6f, 0.6f, 0.6f);
 
-	::K9::Geometry::Geometry sphere1 = ::K9::Geometry::GeometryFactory::sphere(200, 55, 55);
+	::K9::Geometry::Geometry sphere1 = ::K9::Geometry::GeometryFactory::sphere(200, 150, 150);
+	for (int i = 0; i < sphere1.vertexes.size(); ++i) {
+		//	sphere1.vertexes[i] = MatrixFactory::move(0.0f, 0.0f, -300)*MatrixFactory::rotateX(3.14f / 2.0f)*MatrixFactory::move(0.0f, 0.0f, 300)*sphere1.vertexes[i];
+		sphere1.vertexes[i].setPropertyByName("position", MatrixFactory::rotateY(-3.14f / 3.0f)*MatrixFactory::rotateX(3.14f / 2.0f)*(*sphere1.vertexes[i].getPropertyByName("position")));
+		sphere1.vertexes[i].setPropertyByName("normal", MatrixFactory::rotateY(-3.14f / 3.0f)*MatrixFactory::rotateX(3.14f / 2.0f)*(*sphere1.vertexes[i].getPropertyByName("normal")));
+	}
 	sphere1.position = Vector4(0.0f, 0.0f, -300.0f, 1.0f);
-	sphere1.material = Material(Vector4(0.5f, 0.0f, 0.0f, 1.0f), Vector4(1.0f, 0.0f, 0.0f, 1.0f), Vector4(0.8f, 0.8f, 0.8f, 1.0f), 70, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
-	
+	//sphere1.material = Material(Vector4(0.5f, 0.0f, 0.0f, 1.0f), Vector4(1.0f, 0.0f, 0.0f, 1.0f), Vector4(0.8f, 0.8f, 0.8f, 1.0f), 70, Vector4(0.0f, 0.0f, 0.0f, 1.0f));
+	//sphere1.material = Material(TextureMaterialColor(texture1), SolidMaterialColor(1.0f, 0.0f, 0.0f, 1.0f), SolidMaterialColor(0.8f, 0.8f, 0.8f, 1.0f), 70, SolidMaterialColor(0.0f, 0.0f, 0.0f, 1.0f));
+	sphere1.material = Material(TextureMaterialColor(texture2), SolidMaterialColor(1.0f, 0.0f, 0.0f, 1.0f), SolidMaterialColor(0.8f, 0.8f, 0.8f, 1.0f), 70, SolidMaterialColor(0.0f, 0.0f, 0.0f, 1.0f));
+
 	::K9::Geometry::Geometry sphere2 = ::K9::Geometry::GeometryFactory::sphere(200, 55, 55);
 	sphere2.position = Vector4(600.0f, 90.0f, -400.0f, 1.0f);
-	sphere2.material = Material(Vector4(0.5f, 0.0f, 0.0f, 1.0f), Vector4(1.0f, 0.0f, 0.0f, 1.0f), Vector4(0.5f, 0.5f, 0.5f, 1.0f), 100, Vector4(0.2f, 0.2f, 0.2f, 1.0f));
+	//sphere2.material = Material(Vector4(0.5f, 0.0f, 0.0f, 1.0f), Vector4(1.0f, 0.0f, 0.0f, 1.0f), Vector4(0.5f, 0.5f, 0.5f, 1.0f), 100, Vector4(0.2f, 0.2f, 0.2f, 1.0f));
+	sphere2.material = Material(TextureMaterialColor(texture1), SolidMaterialColor(1.0f, 0.0f, 0.0f, 1.0f), SolidMaterialColor(0.5f, 0.5f, 0.5f, 1.0f), 100, SolidMaterialColor(0.2f, 0.2f, 0.2f, 1.0f));
 	//Geometry::Geometry plane1 = Geometry::GeometryFactory::plane(1000, 1000, 10);
 	//Geometry::Geometry plane2 = Geometry::GeometryFactory::plane(1000, 1000, 5);
 
@@ -186,4 +203,29 @@ void addMeshWireframe(K9::Geometry::Geometry& mesh) {
 		}
 		vertexes.insert(std::end(vertexes), std::begin(mesh.vertexes), std::end(mesh.vertexes));
 	}
+}
+
+K9::Image openImage(const string &path) {
+	Mat image;
+	image = imread(path, CV_LOAD_IMAGE_COLOR);   // Read the file
+
+	if (!image.data)                              // Check for invalid input
+	{
+		cout << "Could not open or find the image" << std::endl;
+		return K9::Image(1,1);
+	}
+
+	return initImage(image.data, image.cols, image.rows);
+}
+
+K9::Image initImage(uchar *img, int cols, int rows) {
+	K9::Image out(cols, rows);
+	for (int r = 0; r < rows; r++) {
+		for (int c = 0; c < cols; c++) {
+			K9::Color32 color = K9::setColor32(img[r*cols * 3 + c * 3 + 2], img[r*cols * 3 + c * 3 + 1], img[r*cols * 3 + c * 3], 255);
+			out.setColorAtXY(color, c, r);
+		}
+	}
+
+	return out;
 }

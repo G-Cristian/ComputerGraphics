@@ -8,6 +8,9 @@ namespace K9 {
 	public:
 		using Color = AbstractMaterialColor::Color;
 		SolidMaterialColor()=default;
+		SolidMaterialColor(float x, float y, float z, float w) :
+			_color(Vector4(x,y,z,w)) {
+		}
 		SolidMaterialColor(const Color &color):
 			_color(color){
 		}

@@ -1,3 +1,4 @@
+#include <cmath>
 #include <GeometryFactory.h>
 #include <math.h>
 #include <Vector4.h>
@@ -11,7 +12,7 @@ namespace K9 {
 			vertex.setPropertyByName("position", Vector4(0.0f, radius, 0.0f, 1.0f));
 			vertex.setPropertyByName("color", Vector4(1.0f, 0.0f, 0.0f, 1.0f));
 			vertex.setPropertyByName("normal", Vector4(0.0f, 1.0f, 0.0f, 0.0f));
-			vertex.setPropertyByName("textureCoord", Vector4(0.0f, 0.0f, 0.0f, 0.0f));
+			vertex.setPropertyByName("textureCoord", Vector4((3.14f + std::atan2f(radius, 0.0f))/(2.0f*3.14f), (3.14f - std::acosf(0.0f)) / (3.14f), 0.0f, 0.0f));
 			geometry.vertexes.push_back(vertex);
 
 			float stepsHeightSize = 2.0f * radius / static_cast<float>(stepsHight);
@@ -19,10 +20,13 @@ namespace K9 {
 			for (int i = 1; i < stepsHight - 1; ++i) {
 				for (int j = 0; j < stepsCircumference; ++j) {
 					vertex = Vertex();
-					vertex.setPropertyByName("position", Vector4(radius*cosf(j*stepsCircumferenceSize)*sinf(i*3.14f/stepsHight), radius*cosf(i*3.14f / stepsHight)/*radius-i*stepsHeightSize*/, radius*sinf(j*stepsCircumferenceSize)*sinf(i*3.14f / stepsHight), 1.0f));
+					float x = radius*cosf(j*stepsCircumferenceSize)*sinf(i*3.14f / stepsHight);
+					float y = radius*cosf(i*3.14f / stepsHight)/*radius-i*stepsHeightSize*/;
+					float z = radius*sinf(j*stepsCircumferenceSize)*sinf(i*3.14f / stepsHight);
+					vertex.setPropertyByName("position", Vector4(x, y, z, 1.0f));
 					vertex.setPropertyByName("color", Vector4(1.0f, 0.0f, 0.0f, 1.0f));
-					vertex.setPropertyByName("normal", Vector4(radius*cosf(j*stepsCircumferenceSize)*sinf(i*3.14f / stepsHight), radius*cosf(i*3.14f / stepsHight)/*radius-i*stepsHeightSize*/, radius*sinf(j*stepsCircumferenceSize)*sinf(i*3.14f / stepsHight), 0.0f).normalize());
-					vertex.setPropertyByName("textureCoord", Vector4(0.0f, 0.0f, 0.0f, 0.0f));
+					vertex.setPropertyByName("normal", Vector4(x, y, z, 0.0f).normalize());
+					vertex.setPropertyByName("textureCoord", Vector4((3.14f + std::atan2f(y, x)) / (2.0f * 3.14f), (3.14f - std::acosf(z/Vector4(x,y,z, 0.0f).norm())) / (3.14f), 0.0f, 0.0f));
 					geometry.vertexes.push_back(vertex);
 				}
 			}
@@ -31,7 +35,7 @@ namespace K9 {
 			vertex.setPropertyByName("position", Vector4(0.0f, -radius, 0.0f, 1.0f));
 			vertex.setPropertyByName("color", Vector4(1.0f, 0.0f, 0.0f, 1.0f));
 			vertex.setPropertyByName("normal", Vector4(0.0f, -1.0f, 0.0f, 0.0f));
-			vertex.setPropertyByName("textureCoord", Vector4(0.0f, 0.0f, 0.0f, 0.0f));
+			vertex.setPropertyByName("textureCoord", Vector4((3.14f + std::atan2f(-radius, 0.0f)) / (2.0f * 3.14f), (3.14f - std::acosf(0.0f)) / (3.14f), 0.0f, 0.0f));
 			geometry.vertexes.push_back(vertex);
 
 			int current = 0;
