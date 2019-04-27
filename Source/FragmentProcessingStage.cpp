@@ -1,8 +1,9 @@
+#include <BlendingStageParameters.h>
 #include <FragmentProcessingStage.h>
 #include <GraphicsPipeline.h>
+#include <Image.h>
 #include <memory>
 #include <Point2D.h>
-#include <renderer.h>
 #include <vector>
 
 namespace K9 {
@@ -10,19 +11,18 @@ namespace K9 {
 
 		void FragmentProcessingStage::execute(std::weak_ptr<GraphicsPipeline> graphicsPipeline) {
 			std::shared_ptr<GraphicsPipeline> gp = graphicsPipeline.lock();
-			//BlendingProcessingStageParameters *blendingProcessingStageParameters = new BlendingProcessingStageParameters();
-			//std::vector<BlendingProcessingStageParameters::???> &out??? = blendingProcessingStageParameters->???();
+			//BlendingStageParameters *blendingStageParameters = new BlendingStageParameters();
+			//std::shared_ptr<Image> &outImage = blendingStageParameters->image();
 			if (gp != nullptr) {
 				FragmentProcessingStageParameters *parameters = _parameters.getFragmentProcessingStageParameters();
 				if (parameters != nullptr) {
-					std::shared_ptr<Renderer> renderer = gp->getRenderer();
-					float windowHeight = renderer->window().height;
+					float height = gp->height();
 					const std::vector<FragmentProcessingStageParameters::Fragment> &fragments = parameters->fragments();
 					for (auto it = fragments.begin(); it != fragments.end(); ++it) {
 						Vector4 pos = it->properties.at("position");
 						Vector4 originalPos = it->properties.at("originalPosition");
 						float x = pos[0];
-						float y = windowHeight - pos[1] - 1;
+						float y = height - pos[1] - 1;
 						::Geometry::Point2D point(x, y);
 						//Vector4 col = it->properties.at("color");
 						Vector4 col;
@@ -40,17 +40,18 @@ namespace K9 {
 //							}
 						}
 
-						float c1 = std::max(std::min(1.0f, col[0]),0.0f);
-						float c2 = std::max(std::min(1.0f, col[1]), 0.0f);
-						float c3 = std::max(std::min(1.0f, col[2]), 0.0f);
-						::K9::Color color(c1, c2, c3);
-						renderer->drawPoint(	point,
-														color);
+						float c1 = std::max(std::min(1.0f, col[0]),0.0f) * 255.0f;
+						float c2 = std::max(std::min(1.0f, col[1]), 0.0f)* 255.0f;
+						float c3 = std::max(std::min(1.0f, col[2]), 0.0f)* 255.0f;
+
+						gp->setColorToBackBuffer(point.x, point.y, setColor32(c1, c2, c3, 255));
+
+				//		outImage->setColorAtXY(setColor32(c1, c2, c3, 255), point.x, point.y);
 					}
 				}
 			}
 
-			//_outParameters = GraphicsPipelineStageParametersProxy(std::shared_ptr<BlendingProcessingStageParameters>(blendingProcessingStageParameters));
+			//_outParameters = GraphicsPipelineStageParametersProxy(std::shared_ptr<BlendingStageParameters>(blendingStageParameters));
 		}
 	}
 }

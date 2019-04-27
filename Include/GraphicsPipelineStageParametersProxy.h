@@ -10,6 +10,7 @@ namespace K9 {
 		class VertexProcessingStageParameters;
 		class RasterizationStageParameters;
 		class FragmentProcessingStageParameters;
+		class BlendingStageParameters;
 	}
 }
 
@@ -32,7 +33,7 @@ namespace K9 {
 			VertexProcessingStageParameters* getVertexProcessingStageParameters() const;
 			RasterizationStageParameters* getRasterizationStageParameters() const;
 			FragmentProcessingStageParameters* getFragmentProcessingStageParameters() const;
-			//getBlendingParameters
+			BlendingStageParameters* getBlendingStageParameters() const;
 
 		private:
 			std::shared_ptr<IGraphicsPipelineStageParameters> _parameters;

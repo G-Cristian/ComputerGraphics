@@ -72,17 +72,17 @@ namespace K9 {
 			return out;
 		}
 
-		::K9::Image ImageOperations::resample(::K9::Image &imageIn, float newWidth, float newHeight, const ::K9::Filter &filter)const {
+		::K9::Image ImageOperations::resample(const ::K9::Image &imageIn, float newWidth, float newHeight, const ::K9::Filter &filter)const {
 			return resample(imageIn, -0.5f, imageIn.getWidth() - 0.5f, -0.5f, imageIn.getHeight() - 0.5f, newWidth, newHeight, filter);
 		}
 
-		::K9::Image ImageOperations::resample(::K9::Image &imageIn, float xl, float xh, float yl, float yh, float newWidth, float newHeight, const ::K9::Filter &filter)const {
+		::K9::Image ImageOperations::resample(const ::K9::Image &imageIn, float xl, float xh, float yl, float yh, float newWidth, float newHeight, const ::K9::Filter &filter)const {
 			Image newImage = resampleRows(imageIn, xl, xh, yl, yh, newWidth, yh - yl, filter);
 			//return newImage;
 			return resampleColumns(newImage, -0.5f , newImage.getWidth() - 0.5f, -0.5f, newImage.getHeight() -0.5f, newWidth, newHeight, filter);
 		}
 
-		::K9::Image ImageOperations::resampleRows(::K9::Image &imageIn, float xl, float xh, float yl, float yh, float newWidth, float newHeight, const ::K9::Filter &filter)const {
+		::K9::Image ImageOperations::resampleRows(const ::K9::Image &imageIn, float xl, float xh, float yl, float yh, float newWidth, float newHeight, const ::K9::Filter &filter)const {
 			Image newImage(newWidth, newHeight);
 			auto itOther = newImage.rowInter(0);
 			auto end = imageIn.rowInter(static_cast<int>(std::ceil(yh)));
@@ -95,7 +95,7 @@ namespace K9 {
 			return newImage;
 		}
 
-		::K9::Image ImageOperations::resampleColumns(::K9::Image &imageIn, float xl, float xh, float yl, float yh, float newWidth, float newHeight, const ::K9::Filter &filter)const {
+		::K9::Image ImageOperations::resampleColumns(const ::K9::Image &imageIn, float xl, float xh, float yl, float yh, float newWidth, float newHeight, const ::K9::Filter &filter)const {
 			Image newImage(newWidth, newHeight);
 			auto itOther = newImage.columnI(0);
 			auto end = imageIn.columnI(static_cast<int>(std::ceil(xh)));

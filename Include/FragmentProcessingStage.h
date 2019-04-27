@@ -1,6 +1,7 @@
 #ifndef _FRAGMENTPROCESSINGSTAGE_H_
 #define _FRAGMENTPROCESSINGSTAGE_H_
 
+#include <BlendingStage.h>
 #include <IGraphicsPipelineStage.h>
 #include <memory>
 
@@ -15,7 +16,7 @@ namespace K9 {
 			virtual ~FragmentProcessingStage() = default;
 			void execute(std::weak_ptr<GraphicsPipeline> graphicsPipeline) override final;
 			void setNextStage(std::weak_ptr<GraphicsPipeline> graphicsPipeline, const GraphicsPipelineStageParametersProxy &parameters) const override final {
-				IGraphicsPipelineStage::setNextStage(graphicsPipeline, nullptr);
+				IGraphicsPipelineStage::setNextStage(graphicsPipeline, std::make_shared<BlendingStage>(parameters));
 			}
 		private:
 			FragmentProcessingStage(const IGraphicsPipelineStage &other) = delete;

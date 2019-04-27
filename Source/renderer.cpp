@@ -26,7 +26,7 @@ namespace K9 {
 	}
 
 	void Renderer::drawPoint(const Geometry::Point2D &coord, const Color &color) {
-		_img.at<cv::Vec3b>(cv::Point(coord.x, coord.y)) = cv::Vec3b(static_cast<uchar>(color[0]* 255), static_cast<uchar>(color[1] * 255), static_cast<uchar>(color[2] * 255));
+		_img.at<cv::Vec3b>(cv::Point(coord.x, coord.y)) = cv::Vec3b(static_cast<uchar>(color[0]), static_cast<uchar>(color[1]), static_cast<uchar>(color[2]));
 	}
 
 	void Renderer::show(int x, int y)  const {

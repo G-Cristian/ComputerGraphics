@@ -3,7 +3,9 @@
 
 //my includes
 #include <Camera.h>
+#include <Color.h>
 #include <IGraphicsPipelineStage.h>
+#include <Image.h>
 #include <IRasterizationCommand.h>
 #include <IVertexProcessingStageCommand.h>
 #include <Light.h>
@@ -124,17 +126,53 @@ namespace K9 {
 				_camera = camera;
 			}
 
+			int getMultisampleLevel()const {
+				return _multisampleLevel;
+			}
+
+			void setMultisampleLevel(int multisampleLevel) {
+				_multisampleLevel = multisampleLevel;
+			}
+
+			int width()const {
+				return _width;
+			}
+
+			int height()const {
+				return _height;
+			}
+
+			std::shared_ptr<const Image> getFrontBuffer() const {
+				return _frontBuffer;
+			}
+
+			std::shared_ptr<const Image> getBackBuffer() const {
+				return _backBuffer;
+			}
+
 			const std::shared_ptr<IVertexProcessingStageCommand>& vertexProcessingStageCommand() const { return _vertexProcessingStageCommand; }
 			std::shared_ptr<IVertexProcessingStageCommand>& vertexProcessingStageCommand() { return _vertexProcessingStageCommand; }
 
 			const std::vector<std::shared_ptr<IRasterizationCommand> >& rasterizationCommands() const { return _rasterizationCommands; }
 			std::vector<std::shared_ptr<IRasterizationCommand> >& rasterizationCommands() { return _rasterizationCommands; }
 
+			void setBuffersSize(int width, int height);
+			void clearBackBuffer(Color32 color);
+			void setColorToBackBuffer(int x, int y, Color32 color);
+
+			void swapBuffers() {
+				using std::swap;
+				swap(_frontBuffer, _backBuffer);
+			}
+
 			void execute();
 
 			friend IGraphicsPipelineStage;
 		private:
-			GraphicsPipeline() {
+			GraphicsPipeline():
+				_frontBuffer(nullptr),
+				_backBuffer(nullptr)
+			{
 				_currentStage = std::make_shared<VertexProcessingStage>();
 				_currentStage->setParameters(GraphicsPipelineStageParametersProxy(std::make_shared<VertexProcessingStageParameters>()));
 			}
@@ -161,6 +199,11 @@ namespace K9 {
 			Matrix4 _viewportTransformation;
 			VertexesType _vertexes;
 			Camera *_camera;
+			int _multisampleLevel = 1;
+			int _width;
+			int _height;
+			std::shared_ptr<Image> _frontBuffer;
+			std::shared_ptr<Image> _backBuffer;
 
 			std::shared_ptr<IGraphicsPipelineStage> _currentStage;
 			std::shared_ptr<IVertexProcessingStageCommand> _vertexProcessingStageCommand;

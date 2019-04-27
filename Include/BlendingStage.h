@@ -9,11 +9,14 @@ namespace K9 {
 		class GraphicsPipeline;
 		class BlendingStage : public IGraphicsPipelineStage {
 		public:
-			BlendingStage() :
-				IGraphicsPipelineStage() {
+			BlendingStage(const GraphicsPipelineStageParametersProxy &parameters) :
+				IGraphicsPipelineStage(parameters) {
 			}
 			virtual ~BlendingStage() = default;
 			void execute(std::weak_ptr<GraphicsPipeline> graphicsPipeline) override final;
+			void setNextStage(std::weak_ptr<GraphicsPipeline> graphicsPipeline, const GraphicsPipelineStageParametersProxy &parameters) const override final {
+				IGraphicsPipelineStage::setNextStage(graphicsPipeline, nullptr);
+			}
 		private:
 			BlendingStage(const IGraphicsPipelineStage &other) = delete;
 			BlendingStage& operator=(const IGraphicsPipelineStage &other) = delete;

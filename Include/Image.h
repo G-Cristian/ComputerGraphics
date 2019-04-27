@@ -112,8 +112,16 @@ namespace K9 {
 			size_t _width;
 		};
 
+		RowIterator rowInter(size_t rowI) const{
+			return RowIterator(_image + _width*rowI, _width);
+		}
+
 		RowIterator rowInter(size_t rowI) {
 			return RowIterator(_image + _width*rowI, _width);
+		}
+
+		ColumnIterator columnI(size_t columnI) const{
+			return ColumnIterator(_image + columnI, _width);
 		}
 
 		ColumnIterator columnI(size_t columnI) {
