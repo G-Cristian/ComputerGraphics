@@ -47,7 +47,7 @@ int main() {
 	float hipo = 271.0f / cosf(M_PI_4);
 	float height_2 = sinf(M_PI_4)* hipo;
 	float width_2 = height_2 * width / height;
-	float multisample = 8.0f;
+	float multisample = 1.0f;
 
 	window.name = name;
 	//window.width = width;
@@ -59,11 +59,21 @@ int main() {
 
 	Camera::ImagePlane imagePlane = { -width_2, -height_2, width_2 * 2.0f , height_2 * 2.0f };
 	//Camera::ImagePlane imagePlane = { -width/2, -height/2, width , height  };
-	Camera *camera = new PerspectiveCamera(Vector3(0, 0, 0), Vector3(0, 1, 0), -Vector3(0.0f, 0.0f, 1.0f), imagePlane, -150.0f);
+	Camera *camera = new PerspectiveCamera(Vector3(0, 0.0f, 0), Vector3(0, 1, 0), Vector3(0.0f, 0.0f, -1.0f), imagePlane, -150.0f);
 
 	Light light(Vector3(250.0f, 0.0f, 50), Vector3(1.0f, 1.0f, 1.0f));
 	Light light2(Vector3(-200.0f, 200.0f, -100), Vector3(0.8f, 0.8f, 0.8f));
 	K9::Color ambientLight(0.5f, 0.5f, 0.5f);
+
+	::K9::Geometry::Geometry plane = ::K9::Geometry::GeometryFactory::plane(800, 400, 25);
+	plane.position = Vector4(0.0f, -140.0f, -300.0f, 1.0f);
+	plane.material = Material(	SolidMaterialColor(0.3f, 0.3f, 0.3f, 1.0f),
+								TextureMaterialColor(texture1, TextureMaterialColor::TextureLookUpMethod::WRAP),
+								SolidMaterialColor(0.5f, 0.5f, 0.5f, 1.0f), 100,
+								SolidMaterialColor(0.2f, 0.2f, 0.2f, 1.0f));
+	for (int i = 0; i < plane.vertexes.size(); ++i) {
+		plane.vertexes[i].setPropertyByName("textureCoord", MatrixFactory::scale(2.0f/texture1.getWidth(), 2.0f / texture1.getHeight(),1.0f)*(*plane.vertexes[i].getPropertyByName("textureCoord")));
+	}
 
 	::K9::Geometry::Geometry sphere1 = ::K9::Geometry::GeometryFactory::sphere(200, 150, 150);
 	for (int i = 0; i < sphere1.vertexes.size(); ++i) {
@@ -78,8 +88,8 @@ int main() {
 
 	::K9::Geometry::Geometry sphere2 = ::K9::Geometry::GeometryFactory::sphere(200, 55, 55);
 	sphere2.position = Vector4(600.0f, 90.0f, -400.0f, 1.0f);
-	//sphere2.material = Material(Vector4(0.5f, 0.0f, 0.0f, 1.0f), Vector4(1.0f, 0.0f, 0.0f, 1.0f), Vector4(0.5f, 0.5f, 0.5f, 1.0f), 100, Vector4(0.2f, 0.2f, 0.2f, 1.0f));
-	sphere2.material = Material(SolidMaterialColor(0.3f, 0.3f, 0.3f, 1.0f), TextureMaterialColor(texture1), SolidMaterialColor(0.5f, 0.5f, 0.5f, 1.0f), 100, SolidMaterialColor(0.2f, 0.2f, 0.2f, 1.0f));
+	sphere2.material = Material(Vector4(0.5f, 0.0f, 0.0f, 1.0f), Vector4(1.0f, 0.0f, 0.0f, 1.0f), Vector4(0.5f, 0.5f, 0.5f, 1.0f), 100, Vector4(0.2f, 0.2f, 0.2f, 1.0f));
+	//sphere2.material = Material(SolidMaterialColor(0.3f, 0.3f, 0.3f, 1.0f), TextureMaterialColor(texture1), SolidMaterialColor(0.5f, 0.5f, 0.5f, 1.0f), 100, SolidMaterialColor(0.2f, 0.2f, 0.2f, 1.0f));
 	//Geometry::Geometry plane1 = Geometry::GeometryFactory::plane(1000, 1000, 10);
 	//Geometry::Geometry plane2 = Geometry::GeometryFactory::plane(1000, 1000, 5);
 
@@ -100,6 +110,7 @@ int main() {
 		
 		gp->vertexProcessingStageCommand() = std::make_shared<GraphicsPipeline::VertexProcessingStageCommand>(GraphicsPipeline::VertexProcessingStageCommand());
 
+		addMesh(plane);
 		addMesh(sphere1);
 		addMeshWireframe(sphere2);
 

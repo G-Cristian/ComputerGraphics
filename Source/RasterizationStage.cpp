@@ -1,6 +1,7 @@
 #include <FragmentProcessingStageParameters.h>
 #include <GraphicsPipeline.h>
 #include <GraphicsPipelineStageParametersProxy.h>
+#include <iostream>
 #include <IRasterizationCommand.h>
 #include <memory>
 #include <RasterizationStage.h>
@@ -70,10 +71,10 @@ namespace K9 {
 					float scale = 1.0f / (y1 - y0);
 					for (int y = y0; y >= y1; --y) {
 						FragmentProcessingStageParameters::Fragment fragment;
-						fragment.properties["position"] = Vector4(x, y, z0 * (1 - (y - y0)*scale) + z1*(y - y0)*scale, 0.0f);
+						fragment.properties["position"] = Vector4(x, y, z0 * (1.0f - (y - y0)*scale) + z1*(y - y0)*scale, 0.0f);
 //						fragment.properties["color"] = c0*(1 - (y - y0)*scale) + c1*(y - y0)*scale;
 						fragment.properties["normal"] = n0*(1 - (y - y0)*scale) + n1*(y - y0)*scale;
-						fragment.properties["originalPosition"] = originalPos0*(1 - (y - y0)*scale) + originalPos1*(y - y0)*scale;
+						fragment.properties["originalPosition"] = originalPos0*(1.0f - (y - y0)*scale) + originalPos1*(y - y0)*scale;
 						/*fragment.properties["ka"] = *parameters->vertexes()[p1].getPropertyByName("ka");
 						fragment.properties["kd"] = *parameters->vertexes()[p1].getPropertyByName("kd");
 						fragment.properties["ks"] = *parameters->vertexes()[p1].getPropertyByName("ks");
@@ -81,7 +82,7 @@ namespace K9 {
 						const Vector4 *tc1 = parameters->vertexes()[p1].getPropertyByName("textureCoord");
 						const Vector4 *tc2 = parameters->vertexes()[p2].getPropertyByName("textureCoord");
 						if (tc1 != nullptr && tc2 != nullptr) {
-							Vector4 tcInterpolated = (*tc1) * (1 - (y - y0)*scale) + (*tc2)*(y - y0)*scale;
+							Vector4 tcInterpolated = (*tc1) * (1.0f - (y - y0)*scale) + (*tc2)*(y - y0)*scale;
 							fragment.properties["ka"] = parameters->vertexes()[p1].getMaterial()->ambientCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
 							fragment.properties["kd"] = parameters->vertexes()[p1].getMaterial()->diffuseCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
 							fragment.properties["ks"] = parameters->vertexes()[p1].getMaterial()->specularCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
@@ -102,13 +103,13 @@ namespace K9 {
 					float x1_0 = x1 - x0;
 					float y0_1 = y0 - y1;
 					float d = (y0_1)*(x0 + 1.0f) + (x1_0)*(y0 - 0.5f) + x0*y1 - x1*y0;
-					float scale = 1.0f / (x1 - x0);
+					float scale = 1.0f / static_cast<float>(x1 - x0);
 					for (int x = x0; x <= x1; ++x) {
 						FragmentProcessingStageParameters::Fragment fragment;
-						fragment.properties["position"] = Vector4(x, y, z0 * (1 - (x - x0)*scale) + z1*(x - x0)*scale, 0.0f);
+						fragment.properties["position"] = Vector4(x, y, z0 * (1.0f - (x - x0)*scale) + z1*(x - x0)*scale, 0.0f);
 //						fragment.properties["color"] = c0*(1 - (x - x0)*scale) + c1*(x - x0)*scale;
-						fragment.properties["normal"] = n0*(1 - (x - x0)*scale) + n1*(x - x0)*scale;
-						fragment.properties["originalPosition"] = originalPos0*(1 - (x - x0)*scale) + originalPos1*(x - x0)*scale;
+						fragment.properties["normal"] = n0*(1.0f - (x - x0)*scale) + n1*(x - x0)*scale;
+						fragment.properties["originalPosition"] = originalPos0*(1.0f - (x - x0)*scale) + originalPos1*(x - x0)*scale;
 						/*fragment.properties["ka"] = *parameters->vertexes()[p1].getPropertyByName("ka");
 						fragment.properties["kd"] = *parameters->vertexes()[p1].getPropertyByName("kd");
 						fragment.properties["ks"] = *parameters->vertexes()[p1].getPropertyByName("ks");
@@ -117,7 +118,7 @@ namespace K9 {
 						const Vector4 *tc1 = parameters->vertexes()[p1].getPropertyByName("textureCoord");
 						const Vector4 *tc2 = parameters->vertexes()[p2].getPropertyByName("textureCoord");
 						if (tc1 != nullptr && tc2 != nullptr) {
-							Vector4 tcInterpolated = (*tc1) * (1 - (y - y0)*scale) + (*tc2)*(y - y0)*scale;
+							Vector4 tcInterpolated = (*tc1) * (1.0f - (y - y0)*scale) + (*tc2)*(y - y0)*scale;
 							fragment.properties["ka"] = parameters->vertexes()[p1].getMaterial()->ambientCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
 							fragment.properties["kd"] = parameters->vertexes()[p1].getMaterial()->diffuseCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
 							fragment.properties["ks"] = parameters->vertexes()[p1].getMaterial()->specularCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
@@ -141,7 +142,7 @@ namespace K9 {
 					float scale = 1.0f / (x1 - x0);
 					for (int x = x0; x <= x1; ++x) {
 						FragmentProcessingStageParameters::Fragment fragment;
-						fragment.properties["position"] = Vector4(x, y, z0 * (1 - (x - x0)*scale) + z1*(x - x0)*scale, 0.0f);
+						fragment.properties["position"] = Vector4(x, y, z0 * (1.0f - (x - x0)*scale) + z1*(x - x0)*scale, 0.0f);
 //						fragment.properties["color"] = c0*(1 - (x - x0)*scale) + c1*(x - x0)*scale;
 						fragment.properties["normal"] = n0*(1 - (x - x0)*scale) + n1*(x - x0)*scale;
 						fragment.properties["originalPosition"] = originalPos0*(1 - (x - x0)*scale) + originalPos1*(x - x0)*scale;
@@ -152,7 +153,7 @@ namespace K9 {
 						const Vector4 *tc1 = parameters->vertexes()[p1].getPropertyByName("textureCoord");
 						const Vector4 *tc2 = parameters->vertexes()[p2].getPropertyByName("textureCoord");
 						if (tc1 != nullptr && tc2 != nullptr) {
-							Vector4 tcInterpolated = (*tc1) * (1 - (y - y0)*scale) + (*tc2)*(y - y0)*scale;
+							Vector4 tcInterpolated = (*tc1) * (1.0f - (y - y0)*scale) + (*tc2)*(y - y0)*scale;
 							fragment.properties["ka"] = parameters->vertexes()[p1].getMaterial()->ambientCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
 							fragment.properties["kd"] = parameters->vertexes()[p1].getMaterial()->diffuseCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
 							fragment.properties["ks"] = parameters->vertexes()[p1].getMaterial()->specularCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
@@ -176,10 +177,10 @@ namespace K9 {
 					float scale = 1.0f / (y1 - y0);
 					for (int y = y0; y <= y1; ++y) {
 						FragmentProcessingStageParameters::Fragment fragment;
-						fragment.properties["position"] = Vector4(x, y, z0 * (1 - (y - y0)*scale) + z1*(y - y0)*scale, 0.0f);
+						fragment.properties["position"] = Vector4(x, y, z0 * (1.0f - (y - y0)*scale) + z1*(y - y0)*scale, 0.0f);
 //						fragment.properties["color"] = c0*(1 - (y - y0)*scale) + c1*(y - y0)*scale;
-						fragment.properties["normal"] = n0*(1 - (y - y0)*scale) + n1*(y - y0)*scale;
-						fragment.properties["originalPosition"] = originalPos0*(1 - (y - y0)*scale) + originalPos1*(y - y0)*scale;
+						fragment.properties["normal"] = n0*(1.0f - (y - y0)*scale) + n1*(y - y0)*scale;
+						fragment.properties["originalPosition"] = originalPos0*(1.0f - (y - y0)*scale) + originalPos1*(y - y0)*scale;
 						/*fragment.properties["ka"] = *parameters->vertexes()[p1].getPropertyByName("ka");
 						fragment.properties["kd"] = *parameters->vertexes()[p1].getPropertyByName("kd");
 						fragment.properties["ks"] = *parameters->vertexes()[p1].getPropertyByName("ks");
@@ -187,7 +188,7 @@ namespace K9 {
 						const Vector4 *tc1 = parameters->vertexes()[p1].getPropertyByName("textureCoord");
 						const Vector4 *tc2 = parameters->vertexes()[p2].getPropertyByName("textureCoord");
 						if (tc1 != nullptr && tc2 != nullptr) {
-							Vector4 tcInterpolated = (*tc1) * (1 - (y - y0)*scale) + (*tc2)*(y - y0)*scale;
+							Vector4 tcInterpolated = (*tc1) * (1.0f - (y - y0)*scale) + (*tc2)*(y - y0)*scale;
 							fragment.properties["ka"] = parameters->vertexes()[p1].getMaterial()->ambientCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
 							fragment.properties["kd"] = parameters->vertexes()[p1].getMaterial()->diffuseCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
 							fragment.properties["ks"] = parameters->vertexes()[p1].getMaterial()->specularCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
@@ -209,14 +210,21 @@ namespace K9 {
 		void RasterizationStage::drawTriangleIntoFragments(int p1, int p2, int p3, std::vector<FragmentProcessingStageParameters::Fragment> &outFragments) const {
 			RasterizationStageParameters *parameters = _parameters.getRasterizationStageParameters();
 			if (parameters != nullptr) {
+				Vector4 n0 = (*parameters->vertexes()[p1].getPropertyByName("normal"));
+				Vector4 n1 = (*parameters->vertexes()[p2].getPropertyByName("normal"));
+				Vector4 n2 = (*parameters->vertexes()[p3].getPropertyByName("normal"));
 				//TODO: Test for faces pointing backwards
 				std::shared_ptr<GraphicsPipeline> gp = GraphicsPipeline::getInstance().lock();
-				if (dot(normalized(Vector4(gp->getCamera()->position(), 1.0f) - *parameters->vertexes()[p1].getPropertyByName("originalPosition")), *parameters->vertexes()[p1].getPropertyByName("normal")) < 0.0f
-					|| dot(normalized(Vector4(gp->getCamera()->position(), 1.0f) - *parameters->vertexes()[p2].getPropertyByName("originalPosition")), *parameters->vertexes()[p2].getPropertyByName("normal")) < 0.0f
-					|| dot(normalized(Vector4(gp->getCamera()->position(), 1.0f) - *parameters->vertexes()[p3].getPropertyByName("originalPosition")), *parameters->vertexes()[p3].getPropertyByName("normal")) < 0.0f) {
+				
+				if (dot(normalized(*parameters->vertexes()[p1].getPropertyByName("originalPosition")-Vector4(gp->getCamera()->position(), 1.0f)), normalized(n0+n1+n2)) > 0.0f) {
 					return;
 				}
-
+				
+				/*
+				if (dot(normalized(Vector4(gp->getCamera()->direction(), 0.0f)), normalized(n0 + n1 + n2)) > 0.0f) {
+					return;
+				}
+				*/
 				//draw triangle into fragments
 				Vector4 posV0 = (*(parameters->vertexes()[p1].getPropertyByName("position"))) / (*(parameters->vertexes()[p1].getPropertyByName("position")))[3];
 				Vector4 posV1 = (*(parameters->vertexes()[p2].getPropertyByName("position"))) / (*(parameters->vertexes()[p2].getPropertyByName("position")))[3];
@@ -226,19 +234,15 @@ namespace K9 {
 //				Vector4 c1 = (*parameters->vertexes()[p2].getPropertyByName("color"));
 //				Vector4 c2 = (*parameters->vertexes()[p3].getPropertyByName("color"));
 
-				Vector4 n0 = (*parameters->vertexes()[p1].getPropertyByName("normal"));
-				Vector4 n1 = (*parameters->vertexes()[p2].getPropertyByName("normal"));
-				Vector4 n2 = (*parameters->vertexes()[p3].getPropertyByName("normal"));
-
 				Vector4 originalPos0 = (*parameters->vertexes()[p1].getPropertyByName("originalPosition"));
 				Vector4 originalPos1 = (*parameters->vertexes()[p2].getPropertyByName("originalPosition"));
 				Vector4 originalPos2 = (*parameters->vertexes()[p3].getPropertyByName("originalPosition"));
 
-				unsigned int xMin = static_cast<unsigned int>(std::fminf(posV0[0], std::fminf(posV1[0], posV2[0])));
-				unsigned int yMin = static_cast<unsigned int>(std::fminf(posV0[1], std::fminf(posV1[1], posV2[1])));
-				//Plus 0.999... in order to aprox the ceiling
-				unsigned int xMax = static_cast<unsigned int>(std::fmaxf(posV0[0], std::fmaxf(posV1[0], posV2[0])) + 0.999999f );
-				unsigned int yMax = static_cast<unsigned int>(std::fmaxf(posV0[1], std::fmaxf(posV1[1], posV2[1])) + 0.999999f );
+				unsigned int xMin = static_cast<unsigned int>(roundf(std::fminf(posV0[0], std::fminf(posV1[0], posV2[0])) - 0.5f));
+				unsigned int yMin = static_cast<unsigned int>(roundf(std::fminf(posV0[1], std::fminf(posV1[1], posV2[1])) - 0.5f));
+				
+				unsigned int xMax = static_cast<unsigned int>(std::ceilf(std::fmaxf(posV0[0], std::fmaxf(posV1[0], posV2[0]))));
+				unsigned int yMax = static_cast<unsigned int>(std::ceilf(std::fmaxf(posV0[1], std::fmaxf(posV1[1], posV2[1]))));
 
 				float fAlpha = IMPLICIT_LINE_EQUATION(posV1[0], posV1[1], posV2[0], posV2[1], posV0[0], posV0[1]);
 				float fBeta = IMPLICIT_LINE_EQUATION(posV2[0], posV2[1], posV0[0], posV0[1], posV1[0], posV1[1]);
@@ -268,11 +272,13 @@ namespace K9 {
 					//		}
 						//	else
 							{
-								if ((alpha > 0.0f || fAlpha*f12_1_1 > 0) &&
-									(beta > 0.0f || fBeta*f20_1_1 > 0) &&
-									(gamma > 0.0f || fGamma*f01_1_1 > 0)) {
+								if ((alpha > 0.0f || fAlpha*f12_1_1 > 0.0f) &&
+									(beta > 0.0f || fBeta*f20_1_1 > 0.0f) &&
+									(gamma > 0.0f || fGamma*f01_1_1 > 0.0f)) {
 
 									FragmentProcessingStageParameters::Fragment fragment;
+									//TODO: Added remove default color for testing
+									fragment.properties["kd"] = Vector4(1.0f, 0.0f, 0.0f, 1.0f);
 									fragment.properties["position"] = Vector4(x, y, posV0[2] * alpha + posV1[2] * beta + posV2[2] * gamma, 0.0f);
 //									fragment.properties["color"] = c0*alpha + c1*beta + c2*gamma;
 									fragment.properties["normal"] = normalized(n0*alpha + n1*beta + n2*gamma);
@@ -284,7 +290,7 @@ namespace K9 {
 									const Vector4 *tc1 = parameters->vertexes()[p1].getPropertyByName("textureCoord");
 									const Vector4 *tc2 = parameters->vertexes()[p2].getPropertyByName("textureCoord");
 									const Vector4 *tc3 = parameters->vertexes()[p3].getPropertyByName("textureCoord");
-									if (tc1 != nullptr && tc2 != nullptr) {
+									if (tc1 != nullptr && tc2 != nullptr && tc3 != nullptr) {
 										Vector4 tcInterpolated = (*tc1) * alpha + (*tc2)*beta + (*tc3)*gamma;
 										fragment.properties["ka"] = parameters->vertexes()[p1].getMaterial()->ambientCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
 										fragment.properties["kd"] = parameters->vertexes()[p1].getMaterial()->diffuseCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
@@ -297,7 +303,15 @@ namespace K9 {
 								//	}
 									outFragments.push_back(fragment);
 								}
+								else {
+								//	if(dot(normalized(n0 + n1+ n2),normalized(Vector4(0.0f,0.0f,-1.0f,0.0f))) <= 0.0f)
+									//	std::cout << "!((alpha > 0.0f || fAlpha*f12_1_1 > 0.0f) && (beta > 0.0f || fBeta*f20_1_1 > 0.0f) && (gamma > 0.0f || fGamma*f01_1_1 > 0.0f))" << std::endl;
+								}
 							}
+						}
+						else {
+						//	if (dot(normalized(n0 + n1 + n2), normalized(Vector4(0.0f, 0.0f, -1.0f, 0.0f))) <= 0.0f)
+						//		std::cout << "!(alpha >= 0.0f && beta >= 0.0f && gamma >= 0.0f)" << std::endl;
 						}
 						alpha += (posV1[1] - posV2[1]) / fAlpha;
 						beta += (posV2[1] - posV0[1]) / fBeta;

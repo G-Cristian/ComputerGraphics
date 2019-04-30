@@ -68,5 +68,41 @@ namespace K9 {
 
 			return geometry;
 		}
+
+		Geometry GeometryFactory::plane(float width, float height, int steps) {
+			Geometry geometry;
+			
+			float halfWidth = width / 2.0f;
+			float halfHeight = height / 2.0f;
+			float stepsWidthSize = width / static_cast<float>(steps);
+			float stepsHeightSize = height / static_cast<float>(steps);
+			for (int i = 0; i <= steps; ++i) {
+				for (int j = 0; j <= steps; ++j) {
+					Vertex vertex;
+					float l = -halfWidth + i*stepsWidthSize;
+					float r = -halfHeight + j*stepsHeightSize;
+					vertex.setPropertyByName("position", Vector4(l, 0.0f, r, 1.0f));
+					vertex.setPropertyByName("color", Vector4(1.0f, 0.0f, 0.0f, 1.0f));
+					vertex.setPropertyByName("normal", Vector4(0.0f, 1.0f, 0.0f, 0.0f));
+					vertex.setPropertyByName("textureCoord", Vector4(l, r,0.0f,0.0f));
+
+					geometry.vertexes.push_back(vertex);
+				}
+			}
+
+			for (int j = 0; j < steps; ++j) {
+				for (int i = 0; i < steps; ++i) {
+					int c = i + j*(steps+1);
+					geometry.conections.push_back(c);
+					geometry.conections.push_back(c+steps+1);
+					geometry.conections.push_back(c + steps + 2);
+					geometry.conections.push_back(c);
+					geometry.conections.push_back(c + steps + 2);
+					geometry.conections.push_back(c + 1);
+				}
+			}
+
+			return geometry;
+		}
 	}
 }

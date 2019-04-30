@@ -21,8 +21,8 @@ namespace K9 {
 					for (auto it = fragments.begin(); it != fragments.end(); ++it) {
 						Vector4 pos = it->properties.at("position");
 						Vector4 originalPos = it->properties.at("originalPosition");
-						float x = pos[0];
-						float y = height - pos[1] - 1;
+						float x = std::max(0.0f, std::min(pos[0], static_cast<float>(gp->width() - 1.0f)));
+						float y = std::max(0.0f, std::min(height - pos[1] - 1.0f, height - 1.0f));
 						::Geometry::Point2D point(x, y);
 						//Vector4 col = it->properties.at("color");
 						Vector4 col;
