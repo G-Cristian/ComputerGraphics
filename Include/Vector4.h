@@ -21,7 +21,7 @@ namespace K9 {
 			_vectorImp.w = fillValue;
 			//std::cout << "Vector4 constructor 1" << std::endl;
 		}
-		Vector4(ElementsType x, ElementsType y, ElementsType z, ElementsType w) {
+		Vector4(ElementsType x, ElementsType y, ElementsType z, ElementsType w=ElementsType()) {
 			_vectorImp.x = x;
 			_vectorImp.y = y;
 			_vectorImp.z = z;
@@ -34,7 +34,7 @@ namespace K9 {
 		//	std::cout << "Vector4 constructor 2" << std::endl;
 		}
 
-		Vector4(Vector3 xyz, ElementsType w) {
+		Vector4(Vector3 xyz, ElementsType w=ElementsType()) {
 			_vectorImp.x = xyz[0];
 			_vectorImp.y = xyz[1];
 			_vectorImp.z = xyz[2];
@@ -100,7 +100,7 @@ namespace K9 {
 			return *this;
 		}
 
-		Vector4 operator-() {
+		Vector4 operator-() const {
 			return (*this)*(-1);
 		}
 
@@ -142,6 +142,8 @@ namespace K9 {
 		}
 
 		friend Vector4 normalized(const Vector4 &vector);
+
+		bool isZero() const { return _vectorImp.x == 0.0f && _vectorImp.y == 0.0f && _vectorImp.z == 0.0f && _vectorImp.w == 0.0f; }
 
 	private:
 		//helper functions

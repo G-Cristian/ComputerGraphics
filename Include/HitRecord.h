@@ -1,28 +1,31 @@
 #ifndef _HITRECORD_H_
 #define _HITRECORD_H_
 
+#include <AbstractMaterialColor.h>
+#include <memory>
 #include <Vector3.h>
+#include <Vector4.h>
 
 namespace K9 {
-	typedef Vector3 Color;
 	struct HitRecord {
-		HitRecord(const Color &ka, const Color &kd, const Color &ks, float p, const Color &km, float t, Vector3 n) :
-			ka(ka),
-			kd(kd),
-			ks(ks),
+		using Color = AbstractMaterialColor::Color;
+		HitRecord(const AbstractMaterialColor &ka, const AbstractMaterialColor &kd, const AbstractMaterialColor &ks, float p, const AbstractMaterialColor &km, float t, Vector4 n) :
+			ka(ka.clone()),
+			kd(kd.clone()),
+			ks(ks.clone()),
 			p(p),
-			km(km),
+			km(km.clone()),
 			t(t),
 			n(n) {
 		}
 
-		Color ka;
-		Color kd;
-		Color ks;
+		std::shared_ptr<AbstractMaterialColor> ka;
+		std::shared_ptr<AbstractMaterialColor> kd;
+		std::shared_ptr<AbstractMaterialColor> ks;
 		float p;
-		Color km;
+		std::shared_ptr<AbstractMaterialColor> km;
 		float t;
-		Vector3 n;
+		Vector4 n;
 	};
 }
 

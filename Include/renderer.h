@@ -11,12 +11,13 @@
 #include "Point2D.h"
 
 #include <Vector3.h>
+#include <Vector4.h>
 
 using namespace std;
 using namespace cv;
 
 namespace K9 {
-	typedef Vector3 Color;
+	typedef Vector4 Color;
 
 	class Renderer {
 	public:

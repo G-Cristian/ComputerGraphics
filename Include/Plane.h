@@ -10,7 +10,7 @@ namespace K9 {
 
 	class Plane :public Surface {
 	public:
-		Plane(const Vector3 &point, const Vector3 &normal, const Material &material):
+		Plane(const Vector4 &point, const Vector4 &normal, const Material &material):
 			Surface(material),
 			_a(point),
 			_n(normal){
@@ -21,8 +21,8 @@ namespace K9 {
 
 		~Plane() {}
 	private:
-		Vector3 _a;
-		Vector3 _n;
+		Vector4 _a;
+		Vector4 _n;
 	};
 
 }
