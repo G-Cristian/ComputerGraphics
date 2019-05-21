@@ -77,9 +77,9 @@ namespace K9 {
 			float stepsWidthSize = width / static_cast<float>(steps);
 			float stepsHeightSize = height / static_cast<float>(steps);
 			for (int i = 0; i <= steps; ++i) {
+				float l = -halfWidth + i*stepsWidthSize;
 				for (int j = 0; j <= steps; ++j) {
 					Vertex vertex;
-					float l = -halfWidth + i*stepsWidthSize;
 					float r = -halfHeight + j*stepsHeightSize;
 					vertex.setPropertyByName("position", Vector4(l, 0.0f, r, 1.0f));
 					vertex.setPropertyByName("color", Vector4(1.0f, 0.0f, 0.0f, 1.0f));
@@ -94,11 +94,11 @@ namespace K9 {
 				for (int i = 0; i < steps; ++i) {
 					int c = i + j*(steps+1);
 					geometry.conections.push_back(c);
-					geometry.conections.push_back(c+steps+1);
+					geometry.conections.push_back(c + 1);
 					geometry.conections.push_back(c + steps + 2);
 					geometry.conections.push_back(c);
 					geometry.conections.push_back(c + steps + 2);
-					geometry.conections.push_back(c + 1);
+					geometry.conections.push_back(c + steps + 1);
 				}
 			}
 

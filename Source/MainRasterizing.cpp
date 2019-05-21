@@ -65,7 +65,7 @@ int main() {
 	Light light2(Vector3(-200.0f, 200.0f, -100), Vector3(0.8f, 0.8f, 0.8f));
 	K9::Color ambientLight(0.5f, 0.5f, 0.5f);
 
-	::K9::Geometry::Geometry plane = ::K9::Geometry::GeometryFactory::plane(800, 400, 25);
+	::K9::Geometry::Geometry plane = ::K9::Geometry::GeometryFactory::plane(800, 350, 20);
 	plane.position = Vector4(0.0f, -140.0f, -300.0f, 1.0f);
 	plane.material = Material(	SolidMaterialColor(0.3f, 0.3f, 0.3f, 1.0f),
 								TextureMaterialColor(texture1, TextureMaterialColor::TextureLookUpMethod::WRAP),
