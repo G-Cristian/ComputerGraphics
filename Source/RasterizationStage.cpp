@@ -226,9 +226,13 @@ namespace K9 {
 				}
 				*/
 				//draw triangle into fragments
-				Vector4 posV0 = (*(parameters->vertexes()[p1].getPropertyByName("position"))) / (*(parameters->vertexes()[p1].getPropertyByName("position")))[3];
-				Vector4 posV1 = (*(parameters->vertexes()[p2].getPropertyByName("position"))) / (*(parameters->vertexes()[p2].getPropertyByName("position")))[3];
-				Vector4 posV2 = (*(parameters->vertexes()[p3].getPropertyByName("position"))) / (*(parameters->vertexes()[p3].getPropertyByName("position")))[3];
+				float w0 = (*(parameters->vertexes()[p1].getPropertyByName("position")))[3];
+				float w1 = (*(parameters->vertexes()[p2].getPropertyByName("position")))[3];
+				float w2 = (*(parameters->vertexes()[p3].getPropertyByName("position")))[3];
+				
+				Vector4 posV0 = (*(parameters->vertexes()[p1].getPropertyByName("position"))) / w0;
+				Vector4 posV1 = (*(parameters->vertexes()[p2].getPropertyByName("position"))) / w1;
+				Vector4 posV2 = (*(parameters->vertexes()[p3].getPropertyByName("position"))) / w2;
 
 //				Vector4 c0 = (*parameters->vertexes()[p1].getPropertyByName("color"));
 //				Vector4 c1 = (*parameters->vertexes()[p2].getPropertyByName("color"));
@@ -291,7 +295,9 @@ namespace K9 {
 									const Vector4 *tc2 = parameters->vertexes()[p2].getPropertyByName("textureCoord");
 									const Vector4 *tc3 = parameters->vertexes()[p3].getPropertyByName("textureCoord");
 									if (tc1 != nullptr && tc2 != nullptr && tc3 != nullptr) {
-										Vector4 tcInterpolated = (*tc1) * alpha + (*tc2)*beta + (*tc3)*gamma;
+										float ones = (1.0f / w0) * alpha + (1.0f / w1) * beta + (1.0f / w2) * gamma;
+										Vector4 tcInterpolated = (((*tc1)/w0) * alpha + ((*tc2) / w1)*beta + ((*tc3) / w2)*gamma)/ones;
+
 										fragment.properties["ka"] = parameters->vertexes()[p1].getMaterial()->ambientCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
 										fragment.properties["kd"] = parameters->vertexes()[p1].getMaterial()->diffuseCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
 										fragment.properties["ks"] = parameters->vertexes()[p1].getMaterial()->specularCoefficient()->colorAt(tcInterpolated[0], tcInterpolated[1]);
