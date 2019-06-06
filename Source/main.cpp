@@ -20,8 +20,8 @@
 #include <Vector4.h>
 
 void draw(K9::Renderer &renderer, const std::vector<K9::Surface*> &objects, const K9::Camera *camera, const std::vector<K9::Light*> &lights, const K9::Color &ambientLight);
-K9::Color rayColor(const K9::Ray &ray, float t0, float t1, const vector<K9::Surface*> &objects, const std::vector<K9::Light*> &lights, const K9::Color &ambientLight, int recursionDepth);
-bool isShadowed(const K9::Vector4 &origin, float t0, float t1, const vector<K9::Surface*> &objects, const K9::Light *light);
+K9::Color rayColor(const K9::Ray &ray, float t0, float t1, const vector<K9::Surface*> &objects, const std::vector<K9::Light*> &lights, const K9::Color &ambientLight, int recursionDepth, const std::vector<std::pair<float,float>> &s);
+bool isShadowed(const K9::Vector4 &origin, float t0, float t1, const vector<K9::Surface*> &objects, const K9::Light *light, const std::pair<float, float> &sp);
 inline K9::Vector4 getMirrorReflectionDirection(const K9::Vector4 &viewDirection, const K9::Vector4 &surfaceNormal);
 
 int main() {
@@ -68,50 +68,70 @@ int main() {
 
 void draw(K9::Renderer &renderer, const std::vector<K9::Surface*> &objects, const K9::Camera *camera, const std::vector<K9::Light*> &lights, const K9::Color &ambientLight) {
 	using namespace K9;
-	float n = 4.0f;
-	float n2 = n*n;
+	int n = 4;
+	int n2 = n*n;
+	float fn = n;
+	float fn2 = n2;
+
 	std::default_random_engine generator;
 	std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
+
 	for (int i = 0; i < renderer.window().width; ++i) {
 		float fi = (float)(i);
 		for (int j = 0; j < renderer.window().height; ++j) {
 			float fj = (float)(j);
+			std::vector<std::pair<float, float>> r(n2);
 			Color color(0.0f,0.0f,0.0f,0.0f);
-			for (float p = 0.0f; p < n; p+=1.0f) {
-				for (float q = 0.0f; q < n; q+=1.0f) {
+			for (int p = 0; p < n; p++) {
+				for (int q = 0; q < n; q++) {
 					float ep = distribution(generator);
-					
-					Ray ray = camera->calculateRay(fi+(p + ep) / n, fj + (q + ep) / n, renderer.window().width, renderer.window().height);
-					color += rayColor(ray, 0, 100000, objects, lights, ambientLight, 2);
+					r[q*n + p].first = ((float)(p) + ep) / fn;
+					r[q*n + p].second = ((float)(q) + ep) / fn;
 				}
 			}
-			color = color / n2;
+			std::vector<std::pair<float, float>> s = r;
+			for (int p = 0; p < (int)(n2); ++p) {
+				s[p].first -= 0.5f;
+				s[p].second -= 0.5f;
+			}
+
+			std::shuffle(std::begin(s), std::end(s), generator);
+			for (int p = 0; p < n2; ++p) {
+				Ray ray = camera->calculateRay(fi + r[p].first, fj + r[p].second, renderer.window().width, renderer.window().height);
+				color += rayColor(ray, 0, 100000, objects, lights, ambientLight, 2, s);
+			}
+			color = color / fn2;
 			renderer.drawPoint(Geometry::Point2D(i, renderer.window().height - j - 1), color*255);
 		}
 	}
 }
 
-K9::Color rayColor(const K9::Ray &ray, float t0, float t1, const vector<K9::Surface*> &objects, const std::vector<K9::Light*> &lights, const K9::Color &ambientLight, int recursionDepth) {
+K9::Color rayColor(const K9::Ray &ray, float t0, float t1, const vector<K9::Surface*> &objects, const std::vector<K9::Light*> &lights, const K9::Color &ambientLight, int recursionDepth, const std::vector<std::pair<float, float>> &s) {
 	using namespace std;
 	using namespace K9;
-	Color color(0.0f, 1.0f, 0.0f);
+	Color color(0.0f, 0.0f, 0.0f);
 	for (auto it = objects.begin(); it != objects.end(); it++) {
 		unique_ptr<HitRecord> hr = nullptr;
 		if ((*it)->hit(ray, t0, t1, hr)) {
 			t1 = hr->t;
 			Vector4 point = ray.origin() + hr->t * ray.direction();
-			color = perElementProduct(hr->ka->colorAt(point[0],point[1]), ambientLight);
+
 			for (auto lightIt = lights.begin(); lightIt != lights.end(); lightIt++) {
-				if (!isShadowed(point, 1.0f, 500, objects, *lightIt)) {
-					Vector4 l(normalized((*lightIt)->position() - point));
-					Vector4 h(normalized(l + normalized(-ray.direction())));
-					color = color + perElementProduct(hr->kd->colorAt(point[0], point[1]), (*lightIt)->intensity()) * std::max(0.0f, dot(hr->n, l)) +
-						perElementProduct(hr->ks->colorAt(point[0], point[1]), (*lightIt)->intensity()) * powf(std::max(0.0f, dot(hr->n,h)), hr->p);
+				for (auto sIt = s.begin(); sIt != s.end(); sIt++) {
+					if (!isShadowed(point, 1.0f, 500, objects, *lightIt,*sIt)) {
+						Vector4 l(normalized((*lightIt)->position() - point));
+						Vector4 h(normalized(l + normalized(-ray.direction())));
+						color = color + perElementProduct(hr->kd->colorAt(point[0], point[1]), (*lightIt)->intensity()) * std::max(0.0f, dot(hr->n, l)) +
+							perElementProduct(hr->ks->colorAt(point[0], point[1]), (*lightIt)->intensity()) * powf(std::max(0.0f, dot(hr->n, h)), hr->p);
+					}
 				}
+				color = color / s.size();
+
+				color = color + perElementProduct(hr->ka->colorAt(point[0], point[1]), ambientLight);
 
 				if (recursionDepth > 0 && !hr->km->colorAt(point[0], point[1]).isZero()) {
 					Vector4 mirrorReflectionDirection = getMirrorReflectionDirection(ray.direction(), hr->n);
-					color = color + perElementProduct(hr->km->colorAt(point[0], point[1]), rayColor(Ray(point, mirrorReflectionDirection), 0.5f, 1000, objects, lights, ambientLight, recursionDepth - 1));
+					color = color + perElementProduct(hr->km->colorAt(point[0], point[1]), rayColor(Ray(point, mirrorReflectionDirection), 0.5f, 1000, objects, lights, ambientLight, recursionDepth - 1, s));
 				}
 			}
 		}
@@ -120,11 +140,31 @@ K9::Color rayColor(const K9::Ray &ray, float t0, float t1, const vector<K9::Surf
 	return Color(std::min(1.0f, color[0]), std::min(1.0f, color[1]), std::min(1.0f, color[2]));
 }
 
-bool isShadowed(const K9::Vector4 &origin, float t0, float t1, const vector<K9::Surface*> &objects, const K9::Light *light) {
+bool isShadowed(const K9::Vector4 &origin, float t0, float t1, const vector<K9::Surface*> &objects, const K9::Light *light, const std::pair<float, float> &sp) {
 	using namespace std;
 	using namespace K9;
 	bool hit = false;
-	Ray ray(origin, normalized(light->position() - origin));
+
+	auto dir = light->position() - origin;
+	Vector3 dirX;
+	Vector3 dirY;
+	if (dir[2] != 0.0f) {
+		Vector3 aux1(dir[0], dir[1], dir[2]);
+		Vector3 aux2 = aux1 - Vector3(5.0f, 5.0f, 0.0f);
+		dirX = cross(aux1, aux2);
+		dirY = cross(aux1, dirX);
+	}
+	else if (dir[1] != 0.0f) {
+		Vector3 aux1(dir[0], dir[1], dir[2]);
+		Vector3 aux2 = aux1 - Vector3(5.0f, 0.0f, 5.0f);
+		dirX = cross(aux1, aux2);
+		dirY = cross(aux1, dirX);
+	}
+
+	Vector4 lightPos = light->position() + Vector4(normalized(dirX)*sp.first*60.0f) + Vector4(normalized(dirY)*sp.second*60.0f);
+	
+	Ray ray(origin, normalized(lightPos - origin));
+
 	for (auto oIt = objects.begin(); oIt != objects.end(); oIt++) {
 		unique_ptr<HitRecord> hr = nullptr;
 		if ((*oIt)->hit(ray, t0, t1, hr)) {
