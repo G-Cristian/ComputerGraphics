@@ -24,7 +24,7 @@ namespace K9 {
 		const Vector3& w() const { return _w; }
 		const ImagePlane& imagePlane() const { return _imagePlane; }
 
-		virtual Ray calculateRay(int px, int py, int width, int height) const = 0;
+		virtual Ray calculateRay(float px, float py, float width, float height) const = 0;
 
 	protected:
 		Camera(const Vector3 &position, const Vector3 &up, const Vector3 &direction, const ImagePlane &imagePlane) :

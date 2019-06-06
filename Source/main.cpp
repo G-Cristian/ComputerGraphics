@@ -8,6 +8,7 @@
 #include <PerspectiveCamera.h>
 #include <Plane.h>
 #include <Point2D.h>
+#include <random>
 #include <Ray.h>
 #include <renderer.h>
 #include <SolidMaterialColor.h>
@@ -67,10 +68,24 @@ int main() {
 
 void draw(K9::Renderer &renderer, const std::vector<K9::Surface*> &objects, const K9::Camera *camera, const std::vector<K9::Light*> &lights, const K9::Color &ambientLight) {
 	using namespace K9;
+	float n = 4.0f;
+	float n2 = n*n;
+	std::default_random_engine generator;
+	std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
 	for (int i = 0; i < renderer.window().width; ++i) {
+		float fi = (float)(i);
 		for (int j = 0; j < renderer.window().height; ++j) {
-			Ray ray = camera->calculateRay(i, j, renderer.window().width, renderer.window().height);
-			Color color = rayColor(ray, 0, 100000, objects, lights, ambientLight, 2);
+			float fj = (float)(j);
+			Color color(0.0f,0.0f,0.0f,0.0f);
+			for (float p = 0.0f; p < n; p+=1.0f) {
+				for (float q = 0.0f; q < n; q+=1.0f) {
+					float ep = distribution(generator);
+					
+					Ray ray = camera->calculateRay(fi+(p + ep) / n, fj + (q + ep) / n, renderer.window().width, renderer.window().height);
+					color += rayColor(ray, 0, 100000, objects, lights, ambientLight, 2);
+				}
+			}
+			color = color / n2;
 			renderer.drawPoint(Geometry::Point2D(i, renderer.window().height - j - 1), color*255);
 		}
 	}

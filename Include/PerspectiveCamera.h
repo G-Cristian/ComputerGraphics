@@ -34,7 +34,7 @@ namespace K9 {
 
 		float imagePlaneDistance() const { return _imagePlaneDistance; }
 
-		Ray calculateRay(int px, int py, int width, int height) const override final {
+		Ray calculateRay(float px, float py, float width, float height) const override final {
 			float u = _imagePlane.left + (_imagePlane.width)*(px + 0.5f) / width;
 			float v = _imagePlane.bottom + (_imagePlane.height)*(py + 0.5f) / height;
 
